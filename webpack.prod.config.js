@@ -35,6 +35,22 @@ module.exports = {
         test: /\.s[ac]ss$/i,
         use: ["style-loader", "css-loader", "sass-loader"],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.(txt|csv|mmdb)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "assets/[hash].[ext]",
+              emitFile: true,
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -49,7 +65,7 @@ module.exports = {
       path.join(__dirname, "src/assets", "favicon.ico")
     ),
     new PrerendererWebpackPlugin({
-      routes: ["/", "/xyz"],
+      routes: ["/", "/us_1"],
     }),
   ],
   optimization: {

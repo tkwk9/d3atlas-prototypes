@@ -1,25 +1,29 @@
 .NavBar {
-    display: flex;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    width: 100vw;
-    height: 48px;
-    box-shadow: 0px 0px 12px #000;
-    a {
-        color: white;
-        margin: 0 0 0 24px;
-    }
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 48px;  // fix this
+  background-color: #2a2a2a;
+  box-shadow: 0px 0px 12px #000;
+  z-index: 10;
+  a {
+    color: white;
+    margin: 0 0 0 24px;
+  }
 }
 
 .Content {
+  position: fixed;
+  top: 48px; // fix this
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: calc(100vh - 48px);
+  width: 100vw;
   overflow-y: scroll;
-  box-shadow: 0px 0px 50px #000;
-  background-color: #2A2A2A;
+  background-color: #2a2a2a;
 
   &-text {
     color: white;
@@ -34,7 +38,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: #555555;
-  border: 2px solid #2A2A2A;
+  border: 2px solid #2a2a2a;
   border-radius: 10px;
 }
 
