@@ -66,6 +66,9 @@ module.exports = {
     ),
     new PrerendererWebpackPlugin({
       routes: ["/", "/us_1"],
+      rendererOptions: {
+        renderAfterTime: 1000
+      }
     }),
   ],
   optimization: {
