@@ -1,4 +1,4 @@
-import { Show, createResource } from "solid-js";
+import { Show, createResource, createStore } from "solid-js";
 import UsTopo from "../assets/counties-albers-10m.json";
 import { csv, geoPath } from "d3";
 import * as topojson from "topojson";
@@ -52,34 +52,38 @@ const getFips = async () => {
 
 const UsOne = () => {
   const [fips] = createResource(getFips);
+  const [state, setState] = createStore({
+    bbox: null,
+    prevFocusId: null,
+    focusId: null,
+    layer: "nation",
+  })
   const path = geoPath();
 
   return (
     <Show when={fips()}>
       <svg
-        className="UsMap"
+        className="UsOne"
         width={width}
         height={height}
-        viewBox={`-10 -10 995 630`}
+        viewBox={`0 0 975 610`}
       >
         {Object.entries(fips()).map(([stateId, v]) => (
-          <g
-            key={`group-${stateId}`}
-            id={`group-${stateId}`}
-            stroke="#aaa"
-            stroke-width="0.5"
-            fill="#636b78"
-          >
+          <g className="UsOne-stateGroup">
             <path
-              key={stateId}
               id={stateId}
               d={path(topojson.feature(UsTopo, v.geometry))}
+              stroke="#aaa"
+              stroke-width="0.5"
+              fill="#636b78"
             />
             {Object.entries(v.counties).map(([countyId, v]) => (
               <path
-                key={countyId}
                 id={countyId}
                 d={path(topojson.feature(UsTopo, v.geometry))}
+                stroke="#aaa"
+                stroke-width="0.2"
+                fill="#636b78"
               />
             ))}
           </g>
