@@ -1,4 +1,5 @@
-import { Show, createResource, createStore } from "solid-js";
+import { Show, createResource } from "solid-js";
+import { createStore } from "solid-js/store";
 import UsTopo from "../assets/counties-albers-10m.json";
 import { csv, geoPath } from "d3";
 import * as topojson from "topojson";
@@ -11,19 +12,23 @@ const width = "100%";
 const getFips = async () => {
   const data = await csv(countyFipsCsvPath);
   const countyGeometries = UsTopo.objects.counties.geometries.reduce(
-    (acc, el) => {
-      acc[el.id] = el;
-      return acc;
+    (geometries, geometry) => {
+      geometries[geometry.id] = geometry;
+      return geometries;
     },
     {}
   );
-  const stateGeometries = UsTopo.objects.states.geometries.reduce((acc, el) => {
-    acc[el.id] = el;
-    return acc;
-  }, {});
 
-  const countyFipsData = data.reduce((acc, d) => {
-    if (d.state == "NA") return acc;
+  const stateGeometries = UsTopo.objects.states.geometries.reduce(
+    (geometries, geometry) => {
+      geometries[geometry.id] = geometry;
+      return geometries;
+    },
+    {}
+  );
+
+  return data.reduce((countyFipsData, d) => {
+    if (d.state == "NA") return countyFipsData;
     const stateId =
       d.state.toString().length === 1
         ? "0" + d.state.toString()
@@ -34,32 +39,32 @@ const getFips = async () => {
       fips = "0" + fips;
     }
 
-    acc[stateId] = acc[stateId] || {
+    countyFipsData[stateId] = countyFipsData[stateId] || {
       name: d.state_name,
       abbr: d.state_abbr,
       geometry: stateGeometries[stateId],
       counties: {},
     };
-    acc[stateId].counties[fips] = {
+    countyFipsData[stateId].counties[fips] = {
       name: d.county_name,
       longName: d.long_name,
       geometry: countyGeometries[fips],
     };
-    return acc;
+    return countyFipsData;
   }, {});
-  return countyFipsData;
 };
 
 const UsOne = () => {
   const [fips] = createResource(getFips);
   const [state, setState] = createStore({
-    bbox: null,
+    viewBox: null,
     prevFocusId: null,
     focusId: null,
     layer: "nation",
-  })
-  
+  });
+
   const path = geoPath();
+  console.log(UsTopo);
 
   return (
     <Show when={fips()}>
@@ -80,13 +85,15 @@ const UsOne = () => {
               fill="#636b78"
             />
             {Object.entries(v.counties).map(([countyId, v]) => (
-              <path
-                id={countyId}
-                d={path(topojson.feature(UsTopo, v.geometry))}
-                stroke="#aaa"
-                stroke-width="0.2"
-                fill="#636b78"
-              />
+              <g class="UsOne-countyGroup">
+                <path
+                  id={countyId}
+                  d={path(topojson.feature(UsTopo, v.geometry))}
+                  stroke="#aaa"
+                  stroke-width="0.2"
+                  fill="#636b78"
+                />
+              </g>
             ))}
           </g>
         ))}

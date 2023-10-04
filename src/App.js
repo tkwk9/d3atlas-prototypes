@@ -18,7 +18,9 @@ const Content = () => {
           end
           path="/"
           component={() => (
-            <span className="Content-text">{"Hello World :)"}</span>
+            <div className="Content-text">
+              Isolation is the gift.
+            </div>
           )}
         />
         <Route end path="/us_1" component={UsOne} />
