@@ -9,6 +9,12 @@ import countyFipsCsvPath from "../assets/county_fips_master.csv";
 
 import "./UsTwo.scss";
 
+const layerToSelectableZone = {
+  nation: "state",
+  state: "county",
+  county: "county",
+};
+
 const getFips = async () => {
   const data = await csv(countyFipsCsvPath);
   const countyGeometries = UsTopo.objects.counties.geometries.reduce(
@@ -60,7 +66,7 @@ const UsTwo = () => {
     viewBox: null,
     prevFocusId: null,
     focusId: null,
-    selectableLayer: "state",
+    currentLayer: "nation",
   });
 
   const path = geoPath();
@@ -71,7 +77,8 @@ const UsTwo = () => {
     }`;
     const prevFocusId = state.focusId;
     const focusId = e.target.dataset.zoneId;
-    setState({ viewBox, prevFocusId, focusId });
+    const currentLayer = e.target.dataset.zoneType;
+    setState({ viewBox, prevFocusId, focusId, currentLayer });
     gsap.to(".UsTwo", {
       duration: 1,
       attr: {
@@ -96,28 +103,37 @@ const UsTwo = () => {
           <g class="UsTwo-stateGroup">
             <path
               id={stateId}
-              class={`UsTwo-state`}
+              class={`UsTwo-state UsTwo-zone`}
               data-zone-type="state"
               data-zone-id={stateId}
               onclick={handleZoneClick}
               d={path(topojson.feature(UsTopo, v.geometry))}
               stroke="#aaa"
               stroke-width="0.5"
-              fill="#636b78"
+              // TODO: Refactor
+              fill={
+                layerToSelectableZone[state.currentLayer] === "state"
+                  ? "#636b78"
+                  : "None"
+              }
             />
             {Object.entries(v.counties).map(([countyId, v]) => (
               <g class="UsTwo-countyGroup">
                 <path
                   id={countyId}
-                  class={`UsTwo-county`}
+                  class={`UsTwo-county UsTwo-zone`}
                   data-zone-type="county"
                   data-zone-id={countyId}
                   onclick={handleZoneClick}
                   d={path(topojson.feature(UsTopo, v.geometry))}
                   stroke="#aaa"
                   stroke-width="0.1"
-                  // fill="#636b78"
-                  fill="None"
+                  // TODO: Refactor
+                  fill={
+                    layerToSelectableZone[state.currentLayer] === "county"
+                      ? "#636b78"
+                      : "None"
+                  }
                 />
               </g>
             ))}

@@ -1,10 +1,14 @@
 .UsTwo {
-    &-state {
-
+  &-zone {
+    &:hover {
+      cursor: pointer;
     }
-    &-county {
-        &.selected{
-            // fill: red;
-        }
+  }
+  &-state {
+  }
+  &-county {
+    &.selected {
+      // fill: red;
     }
+  }
 }
