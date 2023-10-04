@@ -58,18 +58,20 @@ const UsOne = () => {
     focusId: null,
     layer: "nation",
   })
+  
   const path = geoPath();
 
   return (
     <Show when={fips()}>
       <svg
-        className="UsOne"
+        class="UsOne"
         width={width}
         height={height}
+        // set default
         viewBox={`0 0 975 610`}
       >
         {Object.entries(fips()).map(([stateId, v]) => (
-          <g className="UsOne-stateGroup">
+          <g class="UsOne-stateGroup">
             <path
               id={stateId}
               d={path(topojson.feature(UsTopo, v.geometry))}
