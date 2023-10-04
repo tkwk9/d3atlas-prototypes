@@ -1,12 +1,14 @@
 import { render } from "solid-js/web";
 import { Router, Route, Routes, A, Navigate } from "@solidjs/router";
 import UsOne from "./pages/UsOne.js";
+import UsTwo from "./pages/UsTwo.js";
 import "./App.scss";
 
 const NavBar = () => (
   <div className="NavBar">
     <A href="/">Home</A>
     <A href="/us_1">US-1</A>
+    <A href="/us_2">US-2</A>
   </div>
 );
 
@@ -24,6 +26,7 @@ const Content = () => {
           )}
         />
         <Route path="/us_1" end component={UsOne} />
+        <Route path="/us_2" end component={UsTwo} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
