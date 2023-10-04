@@ -9,6 +9,7 @@ import countyFipsCsvPath from "../assets/county_fips_master.csv";
 
 import "./UsTwo.scss";
 
+// Helpers
 const layerToSelectableZone = {
   nation: "state",
   state: "county",
@@ -86,6 +87,7 @@ const UsTwo = () => {
   });
 
   const path = geoPath();
+
   const handleZoneClick = (e) => {
     setState((prevState) => {
       const bBox = e.target.getBBox();
