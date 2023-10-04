@@ -15,15 +15,15 @@ const Content = () => {
     <div className="Content">
       <Routes>
         <Route
-          end
           path="/"
+          end
           component={() => (
             <div className="Content-text">
               Isolation is the gift.
             </div>
           )}
         />
-        <Route end path="/us_1" component={UsOne} />
+        <Route path="/us_1" end component={UsOne} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>

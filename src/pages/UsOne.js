@@ -6,8 +6,7 @@ import * as topojson from "topojson";
 
 import countyFipsCsvPath from "../assets/county_fips_master.csv";
 
-const height = "100%";
-const width = "100%";
+import "./UsOne.scss";
 
 const getFips = async () => {
   const data = await csv(countyFipsCsvPath);
@@ -70,8 +69,8 @@ const UsOne = () => {
     <Show when={fips()}>
       <svg
         class="UsOne"
-        width={width}
-        height={height}
+        width="100%"
+        height="100%"
         // set default
         viewBox={`0 0 975 610`}
       >
@@ -79,6 +78,7 @@ const UsOne = () => {
           <g class="UsOne-stateGroup">
             <path
               id={stateId}
+              class="UsOne-state"
               d={path(topojson.feature(UsTopo, v.geometry))}
               stroke="#aaa"
               stroke-width="0.5"
@@ -88,6 +88,7 @@ const UsOne = () => {
               <g class="UsOne-countyGroup">
                 <path
                   id={countyId}
+                  class="UsOne-county selected"
                   d={path(topojson.feature(UsTopo, v.geometry))}
                   stroke="#aaa"
                   stroke-width="0.2"
