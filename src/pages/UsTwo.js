@@ -1,5 +1,12 @@
-import { Show, createResource, createEffect } from "solid-js";
+import {
+  Show,
+  createResource,
+  createRenderEffect,
+  createEffect,
+  onMount,
+} from "solid-js";
 import { createStore } from "solid-js/store";
+import { useParams } from "@solidjs/router";
 import { csv, geoPath } from "d3";
 import anime from "animejs";
 import * as topojson from "topojson";
@@ -13,10 +20,11 @@ import "./UsTwo.scss";
 const layerToSelectableZone = {
   nation: "state",
   state: "county",
-  county: "county",
 };
 
-// TODO: move to util
+const getIsSelectable = (state, zoneType) =>
+  layerToSelectableZone[state.currentLayer] === zoneType;
+
 const getFips = async () => {
   const data = await csv(countyFipsCsvPath);
   const countyGeometries = UsTopo.objects.counties.geometries.reduce(
@@ -62,8 +70,8 @@ const getFips = async () => {
   }, {});
 };
 
-const UsTwo = () => {
-  const [fips] = createResource(getFips);
+const UsTwo = (props) => {
+  onMount(() => console.log(document.getElementById("MainSVG")));
   const [state, setState] = createStore({
     viewBox: null,
     prevFocusId: null,
@@ -77,13 +85,6 @@ const UsTwo = () => {
       },
     ],
     currentLayer: "nation",
-  });
-
-  // TODO: remove
-  createEffect(() => {
-    console.log(state.focusId);
-    console.log(state.zoneStack);
-    console.log(fips());
   });
 
   const path = geoPath();
@@ -105,24 +106,24 @@ const UsTwo = () => {
       return { viewBox, prevFocusId, focusId, currentLayer, zoneStack };
     });
     anime({
-      targets: '.UsTwo',
+      targets: "#MainSVG",
       viewBox: state.viewBox,
       duration: 500,
-      easing: 'easeInQuad',
-      complete: () => console.log('done')
-    })
+      easing: "easeInQuad",
+      complete: () => console.log("done"),
+    });
   };
 
   return (
-    <Show when={fips()}>
       <svg
         class="UsTwo"
+        id="MainSVG"
         width="100%"
         height="100%"
         // original box: 0 0 975 610
         viewBox={`-40 -40 1055 690`}
       >
-        {Object.entries(fips()).map(([stateId, v]) => (
+        {Object.entries(props.fips).map(([stateId, v]) => (
           <g id={`g${stateId}`} class="UsTwo-stateGroup">
             <path
               id={stateId}
@@ -135,12 +136,7 @@ const UsTwo = () => {
               d={path(topojson.feature(UsTopo, v.geometry))}
               stroke="#aaa"
               stroke-width="0.5"
-              // TODO: Refactor
-              fill={
-                layerToSelectableZone[state.currentLayer] === "state"
-                  ? "#636b78"
-                  : "None"
-              }
+              fill={getIsSelectable(state, "state") ? "#636b78" : "None"}
             />
             {Object.entries(v.counties).map(([countyId, v]) => (
               <g id={`g${countyId}`} class="UsTwo-countyGroup">
@@ -155,20 +151,21 @@ const UsTwo = () => {
                   d={path(topojson.feature(UsTopo, v.geometry))}
                   stroke="#aaa"
                   stroke-width="0.1"
-                  // TODO: Refactor
-                  fill={
-                    layerToSelectableZone[state.currentLayer] === "county"
-                      ? "#636b78"
-                      : "None"
-                  }
+                  fill={getIsSelectable(state, "county") ? "#636b78" : "None"}
                 />
               </g>
             ))}
           </g>
         ))}
       </svg>
-    </Show>
   );
 };
 
-export default UsTwo;
+export default () => {
+  const [fips] = createResource(getFips);
+  return (
+    <Show when={fips()}>
+      <UsTwo fips={fips()}/>
+    </Show>
+  )
+}

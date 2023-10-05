@@ -26,7 +26,7 @@ const Content = () => {
           )}
         />
         <Route path="/us_1" end component={UsOne} />
-        <Route path="/us_2" end component={UsTwo} />
+        <Route path="/us_2/:stateId?/:countyId?" end component={UsTwo} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
