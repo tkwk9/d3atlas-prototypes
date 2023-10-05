@@ -1,7 +1,7 @@
 import { Show, createResource, createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 import { csv, geoPath } from "d3";
-import { gsap } from "gsap";
+import anime from "animejs";
 import * as topojson from "topojson";
 
 import UsTopo from "../assets/counties-albers-10m.json";
@@ -104,14 +104,13 @@ const UsTwo = () => {
       const currentLayer = e.target.dataset.zoneType;
       return { viewBox, prevFocusId, focusId, currentLayer, zoneStack };
     });
-    // replace with TweenJS
-    gsap.to(".UsTwo", {
-      duration: 1,
-      attr: {
-        viewBox: state.viewBox,
-      },
-      ease: "power3.inOut",
-    });
+    anime({
+      targets: '.UsTwo',
+      viewBox: state.viewBox,
+      duration: 500,
+      easing: 'easeInQuad',
+      complete: () => console.log('done')
+    })
   };
 
   return (
