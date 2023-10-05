@@ -11,8 +11,8 @@ import { csv, geoPath } from "d3";
 import anime from "animejs";
 import * as topojson from "topojson";
 
-import UsTopo from "../assets/counties-albers-10m.json";
-import countyFipsCsvPath from "../assets/county_fips_master.csv";
+import UsTopoJson from "../assets/counties-albers-10m.json";
+import FipsCsvPath from "../assets/county_fips_master.csv";
 
 import "./UsTwo.scss";
 
@@ -42,8 +42,8 @@ const getCurrentZoneViewBox = (state) =>
 
 // Data Fetcher
 const getFips = async () => {
-  const data = await csv(countyFipsCsvPath);
-  const countyGeometries = UsTopo.objects.counties.geometries.reduce(
+  const data = await csv(FipsCsvPath);
+  const countyGeometries = UsTopoJson.objects.counties.geometries.reduce(
     (geometries, geometry) => {
       geometries[geometry.id] = geometry;
       return geometries;
@@ -51,7 +51,7 @@ const getFips = async () => {
     {}
   );
 
-  const stateGeometries = UsTopo.objects.states.geometries.reduce(
+  const stateGeometries = UsTopoJson.objects.states.geometries.reduce(
     (geometries, geometry) => {
       geometries[geometry.id] = geometry;
       return geometries;
@@ -159,13 +159,13 @@ const UsTwo = (props) => {
         <g id={`g${stateId}`} class={`UsTwo-stateGroup`}>
           <path
             id={stateId}
-            class={`UsTwo-state UsTwo-zone`}
+            class={`UsTwo-state UsTwo-zone ${v.name}`}
             data-zone-type="state"
             data-zone-id={stateId}
             data-zone-name={v.name}
             data-zone-abbr={v.abbr}
             onclick={handleZoneClick}
-            d={path(topojson.feature(UsTopo, v.geometry))}
+            d={path(topojson.feature(UsTopoJson, v.geometry))}
             stroke="#aaa"
             stroke-width="0.5"
             fill={
@@ -176,13 +176,13 @@ const UsTwo = (props) => {
             <g id={`g${countyId}`} class={`UsTwo-countyGroup`}>
               <path
                 id={countyId}
-                class={`UsTwo-county UsTwo-zone`}
+                class={`UsTwo-county UsTwo-zone ${v.name}`}
                 data-zone-type="county"
                 data-zone-id={countyId}
                 data-zone-name={v.name}
                 data-zone-abbr={v.abbr}
                 onclick={handleZoneClick}
-                d={path(topojson.feature(UsTopo, v.geometry))}
+                d={path(topojson.feature(UsTopoJson, v.geometry))}
                 stroke="#aaa"
                 stroke-width="0.1"
                 fill={
