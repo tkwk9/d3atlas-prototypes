@@ -125,7 +125,13 @@ const UsTwo = (props) => {
     });
 
     // Redraw SVG over others
+    document.getElementById(`zoneCushion`)?.remove();
     const g = document.getElementById(`g${getCurrentZoneId(state)}`);
+    const zoneCushion = g.firstChild.cloneNode(true)
+    zoneCushion.classList.remove("UsTwo-zone");
+    zoneCushion.setAttribute("fill", "#000");
+    zoneCushion.setAttribute("id", "zoneCushion");
+    g.insertBefore(zoneCushion, g.firstChild);
     g.parentNode.appendChild(g);
 
     // Copy State
