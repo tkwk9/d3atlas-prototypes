@@ -6,7 +6,7 @@ import {
   onMount,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { useParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import { csv, geoPath } from "d3";
 import anime from "animejs";
 import * as topojson from "topojson";
@@ -17,16 +17,25 @@ import countyFipsCsvPath from "../assets/county_fips_master.csv";
 import "./UsTwo.scss";
 
 // Helpers
-const layerToSelectableZone = {
+const currentVisibleZoneTypes = {
   nation: "state",
   state: "county",
+  county: "county",
 };
 
-const getIsSelectable = (state, zoneType) =>
-  layerToSelectableZone[
-    state.zoneStack[state.zoneStack.length - 1].zoneType
-  ] === zoneType;
-const getFocusId = (state) =>
+const zoneTypeToOffset = {
+  nation: 12,
+  state: 6,
+  county: 2,
+};
+
+const getCurrentZoneTypeOffset = (state) =>
+  zoneTypeToOffset[state.zoneStack[state.zoneStack.length - 1].zoneType];
+const getCurrentVisibleZoneType = (state) =>
+  currentVisibleZoneTypes[state.zoneStack[state.zoneStack.length - 1].zoneType];
+const getCurrentZoneType = (state) =>
+  state.zoneStack[state.zoneStack.length - 1].zoneType;
+const getCurrentZoneId = (state) =>
   state.zoneStack[state.zoneStack.length - 1].zoneId;
 const getCurrentZoneViewBox = (state) =>
   state.zoneStack[state.zoneStack.length - 1].zoneViewBox;
@@ -79,7 +88,6 @@ const getFips = async () => {
 
 // Main Component
 const UsTwo = (props) => {
-  onMount(() => console.log(document.getElementById("MainSVG")));
   const [state, setState] = createStore({
     zoneStack: [
       {
@@ -106,14 +114,36 @@ const UsTwo = (props) => {
         ...prevState.zoneStack,
         { zoneId, zoneType, zoneName, zoneAbbr, zoneViewBox },
       ];
+      anime({
+        targets: `#g${getCurrentZoneId(prevState)}`,
+        translateX: `0px`,
+        translateY: `0px`,
+        duration: 500,
+        easing: "easeInQuad",
+      });
       return { zoneStack };
+    });
+
+    // Redraw SVG over others
+    const g = document.getElementById(`g${getCurrentZoneId(state)}`);
+    g.parentNode.appendChild(g);
+
+    // Copy State
+
+    // Animate
+    const translateOffset = getCurrentZoneTypeOffset(state);
+    anime({
+      targets: `#g${getCurrentZoneId(state)}`,
+      translateX: `${translateOffset}px`,
+      translateY: `-${translateOffset}px`,
+      duration: 500,
+      easing: "easeInQuad",
     });
     anime({
       targets: "#MainSVG",
       viewBox: getCurrentZoneViewBox(state),
       duration: 500,
       easing: "easeInQuad",
-      complete: () => console.log("done"),
     });
   };
 
@@ -126,7 +156,7 @@ const UsTwo = (props) => {
       viewBox={`-40 -40 1055 690`}
     >
       {Object.entries(props.fips).map(([stateId, v]) => (
-        <g id={`g${stateId}`} class="UsTwo-stateGroup">
+        <g id={`g${stateId}`} class={`UsTwo-stateGroup`}>
           <path
             id={stateId}
             class={`UsTwo-state UsTwo-zone`}
@@ -138,10 +168,12 @@ const UsTwo = (props) => {
             d={path(topojson.feature(UsTopo, v.geometry))}
             stroke="#aaa"
             stroke-width="0.5"
-            fill={getIsSelectable(state, "state") ? "#636b78" : "None"}
+            fill={
+              getCurrentVisibleZoneType(state) === "state" ? "#766378" : "None"
+            }
           />
           {Object.entries(v.counties).map(([countyId, v]) => (
-            <g id={`g${countyId}`} class="UsTwo-countyGroup">
+            <g id={`g${countyId}`} class={`UsTwo-countyGroup`}>
               <path
                 id={countyId}
                 class={`UsTwo-county UsTwo-zone`}
@@ -153,7 +185,11 @@ const UsTwo = (props) => {
                 d={path(topojson.feature(UsTopo, v.geometry))}
                 stroke="#aaa"
                 stroke-width="0.1"
-                fill={getIsSelectable(state, "county") ? "#636b78" : "None"}
+                fill={
+                  getCurrentVisibleZoneType(state) === "county"
+                    ? "#636b78"
+                    : "None"
+                }
               />
             </g>
           ))}
