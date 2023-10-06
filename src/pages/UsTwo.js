@@ -16,7 +16,29 @@ import FipsCsvPath from "../assets/county_fips_master.csv";
 
 import "./UsTwo.scss";
 
-// Helpers
+// SVG Helpers
+const rearrange = (zoneNode, zoneCushion) => {
+  let currentGroupNode = zoneNode.parentNode;
+  currentGroupNode.insertBefore(zoneCushion, zoneNode);
+  while (
+    currentGroupNode.parentNode &&
+    currentGroupNode.parentNode.classList.contains("UsTwo-zoneGroup")
+  ) {
+    currentGroupNode.parentNode.appendChild(currentGroupNode);
+    currentGroupNode = currentGroupNode.parentNode;
+  }
+};
+
+const createZoneCushion = (zoneNode) => {
+  document.getElementById(`zoneCushion`)?.remove();
+  const zoneCushion = zoneNode.cloneNode(true);
+  zoneCushion.classList.remove("UsTwo-zone");
+  zoneCushion.setAttribute("fill", "#000");
+  zoneCushion.setAttribute("id", "zoneCushion");
+  return zoneCushion;
+};
+
+// State Getters
 const currentVisibleZoneTypes = {
   nation: "state",
   state: "county",
@@ -124,15 +146,8 @@ const UsTwo = (props) => {
       return { zoneStack };
     });
 
-    // Redraw SVG over others
-    document.getElementById(`zoneCushion`)?.remove();
-    const g = document.getElementById(`g${getCurrentZoneId(state)}`);
-    const zoneCushion = g.firstChild.cloneNode(true)
-    zoneCushion.classList.remove("UsTwo-zone");
-    zoneCushion.setAttribute("fill", "#000");
-    zoneCushion.setAttribute("id", "zoneCushion");
-    g.insertBefore(zoneCushion, g.firstChild);
-    g.parentNode.appendChild(g);
+    const zoneNode = e.target;
+    rearrange(zoneNode, createZoneCushion(zoneNode));
 
     // Copy State
 
@@ -161,46 +176,53 @@ const UsTwo = (props) => {
       height="100%"
       viewBox={`-40 -40 1055 690`}
     >
-      {Object.entries(props.fips).map(([stateId, v]) => (
-        <g id={`g${stateId}`} class={`UsTwo-stateGroup`}>
-          <path
-            id={stateId}
-            class={`UsTwo-state UsTwo-zone ${v.name}`}
-            data-zone-type="state"
-            data-zone-id={stateId}
-            data-zone-name={v.name}
-            data-zone-abbr={v.abbr}
-            onclick={handleZoneClick}
-            d={path(topojson.feature(UsTopoJson, v.geometry))}
-            stroke="#aaa"
-            stroke-width="0.5"
-            fill={
-              getCurrentVisibleZoneType(state) === "state" ? "#766378" : "None"
-            }
-          />
-          {Object.entries(v.counties).map(([countyId, v]) => (
-            <g id={`g${countyId}`} class={`UsTwo-countyGroup`}>
-              <path
-                id={countyId}
-                class={`UsTwo-county UsTwo-zone ${v.name}`}
-                data-zone-type="county"
-                data-zone-id={countyId}
-                data-zone-name={v.name}
-                data-zone-abbr={v.abbr}
-                onclick={handleZoneClick}
-                d={path(topojson.feature(UsTopoJson, v.geometry))}
-                stroke="#aaa"
-                stroke-width="0.1"
-                fill={
-                  getCurrentVisibleZoneType(state) === "county"
-                    ? "#636b78"
-                    : "None"
-                }
-              />
-            </g>
-          ))}
-        </g>
-      ))}
+      <g id={`gUS`} class={`UsTwo-nationGroup UsTwo-zoneGroup`}>
+        {Object.entries(props.fips).map(([stateId, v]) => (
+          <g id={`g${stateId}`} class={`UsTwo-stateGroup UsTwo-zoneGroup`}>
+            <path
+              id={stateId}
+              class={`UsTwo-state UsTwo-zone ${v.name}`}
+              data-zone-type="state"
+              data-zone-id={stateId}
+              data-zone-name={v.name}
+              data-zone-abbr={v.abbr}
+              onclick={handleZoneClick}
+              d={path(topojson.feature(UsTopoJson, v.geometry))}
+              stroke="#aaa"
+              stroke-width="0.5"
+              fill={
+                getCurrentVisibleZoneType(state) === "state"
+                  ? "#766378"
+                  : "None"
+              }
+            />
+            {Object.entries(v.counties).map(([countyId, v]) => (
+              <g
+                id={`g${countyId}`}
+                class={`UsTwo-countyGroup UsTwo-zoneGroup`}
+              >
+                <path
+                  id={countyId}
+                  class={`UsTwo-county UsTwo-zone ${v.name}`}
+                  data-zone-type="county"
+                  data-zone-id={countyId}
+                  data-zone-name={v.name}
+                  data-zone-abbr={v.abbr}
+                  onclick={handleZoneClick}
+                  d={path(topojson.feature(UsTopoJson, v.geometry))}
+                  stroke="#aaa"
+                  stroke-width="0.1"
+                  fill={
+                    getCurrentVisibleZoneType(state) === "county"
+                      ? "#636b78"
+                      : "None"
+                  }
+                />
+              </g>
+            ))}
+          </g>
+        ))}
+      </g>
     </svg>
   );
 };
