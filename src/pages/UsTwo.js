@@ -17,7 +17,7 @@ import FipsCsvPath from "../assets/county_fips_master.csv";
 import "./UsTwo.scss";
 
 // SVG Helpers
-const rearrange = (zoneNode) => {
+const rearrangeSvg = (zoneNode) => {
   let currentGroupNode = zoneNode.parentNode;
   while (
     currentGroupNode.parentNode &&
@@ -147,7 +147,7 @@ const UsTwo = (props) => {
 
     const zoneNode = e.target;
     removeAndAddZoneCushion(zoneNode);
-    rearrange(zoneNode);
+    rearrangeSvg(zoneNode);
 
     // Animate
     const translateOffset = getCurrentZoneTypeOffset(state);
