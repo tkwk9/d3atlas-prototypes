@@ -17,9 +17,8 @@ import FipsCsvPath from "../assets/county_fips_master.csv";
 import "./UsTwo.scss";
 
 // SVG Helpers
-const rearrange = (zoneNode, zoneCushion) => {
+const rearrange = (zoneNode) => {
   let currentGroupNode = zoneNode.parentNode;
-  currentGroupNode.insertBefore(zoneCushion, zoneNode);
   while (
     currentGroupNode.parentNode &&
     currentGroupNode.parentNode.classList.contains("UsTwo-zoneGroup")
@@ -29,14 +28,14 @@ const rearrange = (zoneNode, zoneCushion) => {
   }
 };
 
-const createZoneCushion = (zoneNode) => {
+const removeAndAddZoneCushion = (zoneNode) => {
   document.getElementById(`zoneCushion`)?.remove();
   const zoneCushion = zoneNode.cloneNode(true);
   zoneCushion.classList.remove("UsTwo-zone");
   zoneCushion.setAttribute("fill", "#000");
   zoneCushion.setAttribute("id", "zoneCushion");
-  return zoneCushion;
-};
+  zoneNode.parentNode.insertBefore(zoneCushion, zoneNode);
+}
 
 // State Getters
 const currentVisibleZoneTypes = {
@@ -147,9 +146,8 @@ const UsTwo = (props) => {
     });
 
     const zoneNode = e.target;
-    rearrange(zoneNode, createZoneCushion(zoneNode));
-
-    // Copy State
+    removeAndAddZoneCushion(zoneNode);
+    rearrange(zoneNode);
 
     // Animate
     const translateOffset = getCurrentZoneTypeOffset(state);
