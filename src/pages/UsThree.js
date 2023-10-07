@@ -82,15 +82,8 @@ const getFips = async () => {
 
   return data.reduce((countyFipsData, d) => {
     if (d.state == "NA") return countyFipsData;
-    const stateId =
-      d.state.toString().length === 1
-        ? "0" + d.state.toString()
-        : d.state.toString();
-
-    let fips = d.fips.toString();
-    while (fips.length < 5) {
-      fips = "0" + fips;
-    }
+    const stateId = d.state.toString().padStart(2, "0");
+    const fips = d.fips.toString().padStart(5, "0");
 
     countyFipsData[stateId] = countyFipsData[stateId] || {
       name: d.state_name,
@@ -109,6 +102,7 @@ const getFips = async () => {
 
 // Main Component
 const UsThree = (props) => {
+  console.log(props.fips);
   const [state, setState] = createStore({
     zoneStack: [
       {
