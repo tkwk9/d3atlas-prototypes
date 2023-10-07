@@ -39,7 +39,7 @@ module.exports = {
         type: "asset/resource",
       },
       {
-        test: /\.(txt|csv|mmdb)$/,
+        test: /\.(txt|csv|tsv|mmdb)$/,
         use: [
           {
             loader: "file-loader",
