@@ -1,7 +1,7 @@
 import { Show, createResource } from "solid-js";
 import { tsv, scaleLinear, scaleBand, max, formatLocale, format } from "d3";
 import DummyStateTsvPath from "../assets/state-population-2010-2019.tsv";
-
+import anime from "animejs";
 const width = 900;
 const height = 900;
 
@@ -37,6 +37,18 @@ export default () => {
 
   return (
     <Show when={data()}>
+      <button
+        onclick={() => {
+          anime({
+            targets: `.bar`,
+            scaleX: [0, 1],
+            duration: 500,
+            easing: "easeInQuad",
+          });
+        }}
+      >
+        Animate
+      </button>
       <div
         style={{
           width: `${width}px`,
@@ -44,20 +56,11 @@ export default () => {
         }}
       >
         <svg width="100%" height="100%" style={{ "background-color": "green" }}>
-          {/* y-axis */}
-          {/* <line
-            x1={marginLeft}
-            y1={marginTop}
-            x2={marginLeft}
-            y2={marginTop + innerHeight}
-            stroke="black"
-          /> */}
           <g
             transform={`translate(${marginLeft}, ${marginRight})`}
             x={marginLeft}
             y={marginTop}
           >
-            
             {xScale.ticks().map((t) => {
               console.log(t);
               return (
@@ -67,7 +70,7 @@ export default () => {
                     y1={0}
                     x2={xScale(t)}
                     y2={innerHeight}
-                    stroke="#bbb"
+                    stroke="gray"
                   />
                   <text
                     style={{
@@ -91,20 +94,16 @@ export default () => {
               stroke="black"
             />
             {/* y-axis */}
-            <line
-              x1={0}
-              y1={0}
-              x2={0}
-              y2={innerHeight}
-              stroke="black"
-            />
+            <line x1={0} y1={0} x2={0} y2={innerHeight} stroke="black" />
             {data().map((d) => {
               return (
                 <rect
+                  class={"bar"}
                   x="0"
                   y={yScale(d.State)}
                   width={xScale(d["2019"])}
                   height={yScale.bandwidth()}
+                  style={{ transform: "scale(0.5, 1)" }}
                   fill="#000"
                 />
               );
