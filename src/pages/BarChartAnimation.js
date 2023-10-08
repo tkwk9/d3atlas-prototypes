@@ -2,8 +2,8 @@ import { Show, createResource } from "solid-js";
 import { tsv, scaleLinear, scaleBand, max, formatLocale, format } from "d3";
 import DummyStateTsvPath from "../assets/state-population-2010-2019.tsv";
 import anime from "animejs";
-const width = 1200;
-const height = 900;
+const width = 1600;
+const height = 1000;
 
 const marginLeft = 20;
 const marginRight = 120;
@@ -16,6 +16,8 @@ const innerHeight = height - marginTop - marginBottom;
 //https://observablehq.com/@d3/d3-format
 const xAxisTickFormat = format(".2s");
 // const xAxisTickFormat = format(",.2r");
+
+let noanim = false;
 
 export default () => {
   let xScale, yScale, xTickFormat;
@@ -128,6 +130,8 @@ export default () => {
         </button>
         <button
           onclick={() => {
+            if (noanim) return;
+            noanim = true;
             const delayBase = 75;
             let delay = delayBase * 14;
             for (let i of document.getElementsByClassName("bar")) {
@@ -151,6 +155,9 @@ export default () => {
                 delay: i.getAttribute("x"),
                 easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
+                complete: () => {
+                  if (i.innerHTML === "California") noanim = false;
+                },
               });
               delay -= delayBase;
             }
