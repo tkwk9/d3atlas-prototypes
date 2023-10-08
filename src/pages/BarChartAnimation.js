@@ -2,13 +2,13 @@ import { Show, createResource } from "solid-js";
 import { tsv, scaleLinear, scaleBand, max, formatLocale, format } from "d3";
 import DummyStateTsvPath from "../assets/state-population-2010-2019.tsv";
 import anime from "animejs";
-const width = 1600;
+const width = 1200;
 const height = 1000;
 
-const marginLeft = 20;
-const marginRight = 120;
-const marginTop = 20;
-const marginBottom = 30;
+const marginLeft = 40;
+const marginRight = 40;
+const marginTop = 80;
+const marginBottom = 60;
 
 const innerWidth = width - marginLeft - marginRight;
 const innerHeight = height - marginTop - marginBottom;
@@ -31,7 +31,7 @@ export default () => {
       .paddingInner(0.2)
       .paddingOuter(0.5);
     xScale = scaleLinear()
-      .domain([0, max(sliced, (d) => parseInt(d["2019"]))])
+      .domain([0, max(sliced, (d) => parseInt(d["2019"])) * 1.1])
       .range([0, innerWidth]);
     console.log(xScale.ticks());
     console.log(xScale.ticks().map((tick) => xAxisTickFormat(tick)));
@@ -43,11 +43,16 @@ export default () => {
       <div style={{ position: "absolute", top: "20px", left: "20px" }}>
         <button
           onclick={() => {
+            if (noanim) return;
+            noanim = true;
             anime({
               targets: `.bar`,
               scaleX: [0, 1],
               duration: 500,
               easing: "easeInQuad",
+              complete: () => {
+                noanim = false;
+              },
             });
           }}
         >
@@ -55,12 +60,17 @@ export default () => {
         </button>
         <button
           onclick={() => {
+            if (noanim) return;
+            noanim = true;
             anime({
               targets: `.bar`,
               scaleX: [0, 1],
               opacity: [0, 1],
               duration: 1000,
               easing: "easeInQuad",
+              complete: () => {
+                noanim = false;
+              },
             });
           }}
         >
@@ -68,6 +78,8 @@ export default () => {
         </button>
         <button
           onclick={() => {
+            if (noanim) return;
+            noanim = true;
             for (let i of document.getElementsByClassName("bar")) {
               console.log(-1 * i.getAttribute("width"));
               console.log(i.getAttribute("width"));
@@ -88,6 +100,9 @@ export default () => {
                 //   opacity: [0, 1],
                 duration: 1000,
                 easing: "easeInQuad",
+                complete: () => {
+                  if (i.innerHTML === "California") noanim = false;
+                },
               });
             }
             // console.log(st);
@@ -106,6 +121,8 @@ export default () => {
         </button>
         <button
           onclick={() => {
+            if (noanim) return;
+            noanim = true;
             for (let i of document.getElementsByClassName("bar")) {
               anime({
                 targets: i,
@@ -122,6 +139,9 @@ export default () => {
                 duration: 1000,
                 easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
+                complete: () => {
+                  if (i.innerHTML === "California") noanim = false;
+                },
               });
             }
           }}
@@ -165,6 +185,56 @@ export default () => {
         >
           Animate 5
         </button>
+        <button
+          onclick={() => {
+            if (noanim) return;
+            noanim = true;
+            const delayBase = 75;
+            let delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("bar")) {
+              console.log(delay);
+              anime({
+                targets: i,
+                x: [-1 * i.getAttribute("width"), 0],
+                duration: 1000,
+                easing: "easeOutBounce",
+                delay: i.getAttribute("width"),
+
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+              delay -= delayBase;
+            }
+            delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("state-text")) {
+              anime({
+                targets: i,
+                x: [-10, i.getAttribute("x")],
+                duration: 1000,
+                delay: i.getAttribute("x"),
+                easing: "easeOutBounce",
+                complete: () => {
+                  anime({
+                    targets: document.getElementById(`${i.innerHTML}-val`),
+                    innerHTML: ["0.0", i.innerHTML],
+                    opacity:[0.0, 1.0],
+                    easing: "linear",
+                    duration: 1000,
+                  });
+                  if (i.innerHTML === "California") noanim = false;
+                },
+              });
+              delay -= delayBase;
+              delay = delayBase * 14;
+              for (let i of document.getElementsByClassName("val-text")) {
+                i.setAttribute("opacity", 0)
+                
+                delay -= delayBase;
+              }
+            }
+          }}
+        >
+          Animate 6
+        </button>
       </div>
 
       <div
@@ -176,8 +246,22 @@ export default () => {
         <svg
           width="100%"
           height="100%"
-          style={{ "background-color": "#B1BCBE" }}
+          style={{ "background-color": "#393939" }}
         >
+          <text
+          style={{
+            "text-anchor": "middle",
+            "alignment-baseline": "before-edge",
+          }}
+          x={width/2}
+          y={marginTop/4}
+          font-size="32px"
+          dy="7"
+          fill="#aaaaaa"
+        >
+          Bar Chart 0.6
+        </text>
+
           <g
             transform={`translate(${marginLeft}, ${marginTop})`}
             x={marginLeft}
@@ -189,10 +273,10 @@ export default () => {
                 <>
                   <line
                     x1={xScale(t)}
-                    y1={0}
+                    y1={innerHeight - 10}
                     x2={xScale(t)}
                     y2={innerHeight}
-                    stroke="gray"
+                    stroke="#aaaaaa"
                   />
                 </>
               );
@@ -200,8 +284,6 @@ export default () => {
             {data().map((d) => {
               return (
                 <>
-                  {console.log(d)}
-                  {console.log(xScale(d["2019"]))}
                   <rect
                     class={"bar"}
                     x="0"
@@ -210,11 +292,10 @@ export default () => {
                     y={yScale(d.State)}
                     width={xScale(d["2019"])}
                     height={yScale.bandwidth()}
-                    fill="#acb5af"
-                    stroke="#464a47"
+                    fill="#c6def1"
+                    stroke="#c6def1"
                     stroke-width="1.5"
                   />
-
                   <text
                     class="state-text"
                     style={{
@@ -223,16 +304,30 @@ export default () => {
                     }}
                     x={xScale(d["2019"]) - 10}
                     y={yScale(d["State"]) + yScale.bandwidth() / 2}
-                    fill="#464a47"
+                    fill="#1c1c1c"
                   >
                     {d["State"]}
+                  </text>
+
+                  <text
+                    class="val-text"
+                    id={`${d.State}-val`}
+                    style={{
+                      "text-anchor": "beginning",
+                      "alignment-baseline": "central",
+                    }}
+                    font-size="24px"
+                    x={xScale(d["2019"]) + 10}
+                    y={yScale(d["State"]) + yScale.bandwidth() / 2}
+                    fill="#aaaaaa"
+                  >
+                    {xAxisTickFormat(d["2019"])}
                   </text>
                 </>
               );
             })}
             {/* xScale labels */}
             {xScale.ticks().map((t) => {
-              console.log(t);
               return (
                 <>
                   <text
@@ -242,6 +337,8 @@ export default () => {
                     }}
                     x={xScale(t)}
                     y={innerHeight}
+                    dy="7"
+                    fill="#aaaaaa"
                   >
                     {xAxisTickFormat(t)}
                   </text>
@@ -254,13 +351,13 @@ export default () => {
               y1={innerHeight}
               x2={innerWidth}
               y2={innerHeight}
-              stroke="black"
+              stroke="#aaaaaa"
             />
             {/* y-axis */}
-            <line x1={0} y1={0} x2={0} y2={innerHeight} stroke="black" />
+            <line x1={0} y1={0} x2={0} y2={innerHeight} stroke="#aaaaaa" />
           </g>
           <rect
-            fill={"#B1BCBE"}
+            fill={"#393939"}
             x="-1"
             y="0"
             width={marginLeft}
