@@ -64,6 +64,44 @@ export default () => {
         >
           Animate 2
         </button>
+        <button
+          onclick={() => {
+            for (let i of document.getElementsByClassName("bar")) {
+              console.log(-1 * i.getAttribute("width"));
+              console.log(i.getAttribute("width"));
+              anime({
+                targets: i,
+                x: [-1 * i.getAttribute("width"), 0],
+                // x: [0, i.getAttribute("x")],
+                // opacity: [0, 1],
+                duration: 1000,
+                easing: "easeInQuad",
+              });
+            }
+            for (let i of document.getElementsByClassName("state-text")) {
+              anime({
+                targets: i,
+                x: [-10, i.getAttribute("x")],
+                //   scaleX: [0, 1],
+                //   opacity: [0, 1],
+                duration: 1000,
+                easing: "easeInQuad",
+              });
+            }
+            // console.log(st);
+            // st.forEach(() => console.log('hi'));
+            // anime({
+            //   targets: `.state-text`,
+            //   //   x={}
+            //   //   scaleX: [0, 1],
+            //   //   opacity: [0, 1],
+            //   duration: 500,
+            //   easing: "easeInQuad",
+            // });
+          }}
+        >
+          Animate 3
+        </button>
       </div>
 
       <div
@@ -82,8 +120,8 @@ export default () => {
             x={marginLeft}
             y={marginTop}
           >
+            {/* xScale lines */}
             {xScale.ticks().map((t) => {
-              console.log(t);
               return (
                 <>
                   <line
@@ -93,6 +131,47 @@ export default () => {
                     y2={innerHeight}
                     stroke="gray"
                   />
+                </>
+              );
+            })}
+            {data().map((d) => {
+              return (
+                <>
+                  {console.log(d)}
+                  {console.log(xScale(d["2019"]))}
+                  <rect
+                    class={"bar"}
+                    x="0"
+                    rx="2"
+                    style={{ "border-radius": "5px" }}
+                    y={yScale(d.State)}
+                    width={xScale(d["2019"])}
+                    height={yScale.bandwidth()}
+                    fill="#acb5af"
+                    stroke="#464a47"
+                    stroke-width="1.5"
+                  />
+
+                  <text
+                    class="state-text"
+                    style={{
+                      "text-anchor": "end",
+                      "alignment-baseline": "central",
+                    }}
+                    x={xScale(d["2019"]) - 10}
+                    y={yScale(d["State"]) + yScale.bandwidth() / 2}
+                    fill="#464a47"
+                  >
+                    {d["State"]}
+                  </text>
+                </>
+              );
+            })}
+            {/* xScale labels */}
+            {xScale.ticks().map((t) => {
+              console.log(t);
+              return (
+                <>
                   <text
                     style={{
                       "text-anchor": "middle",
@@ -115,25 +194,15 @@ export default () => {
               stroke="black"
             />
             {/* y-axis */}
-
-            {data().map((d) => {
-              return (
-                <rect
-                  class={"bar"}
-                  x="0"
-                  rx="2"
-                  style={{ "border-radius": "5px" }}
-                  y={yScale(d.State)}
-                  width={xScale(d["2019"])}
-                  height={yScale.bandwidth()}
-                  fill="#acb5af"
-                  stroke="#464a47"
-                  stroke-width="1.5"
-                />
-              );
-            })}
             <line x1={0} y1={0} x2={0} y2={innerHeight} stroke="black" />
           </g>
+          <rect
+            fill={"#B1BCBE"}
+            x="-1"
+            y="0"
+            width={marginLeft}
+            height={height - marginBottom}
+          />
         </svg>
       </div>
     </Show>
