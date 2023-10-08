@@ -11,8 +11,8 @@ const NavBar = () => (
     <A href="/">Home</A>
     <A href="/us_1">US-1</A>
     <A href="/us_2">US-2</A>
-    <A href="/us_3">US-3</A>
     <A href="/bar_chart_animation">BarChartAnimation</A>
+    <A href="/us_3">US-3</A>
   </div>
 );
 

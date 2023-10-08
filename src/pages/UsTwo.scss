@@ -16,13 +16,43 @@
     }
   }
 }
+.bar {
+  transition: stroke-width, fill 0.5s;
+  fill: #c6def1;
+  stroke: #4e585f;
+  stroke-width: 1;
+  &:hover {
+    fill: #f1c6d8;
+    cursor: pointer;
+    stroke-width: 3;
+    stroke: #65525a;
+  }
+}
+
+.state-text {
+  pointer-events: none;
+  user-select: none;
+  // &:hover {
+  //   fill: #f1c6d8;
+  //   cursor: pointer;
+  // }
+}
+
+.val-text {
+  pointer-events: none;
+  user-select: none;
+  // &:hover {
+  //   fill: #f1c6d8;
+  //   cursor: pointer;
+  // }
+}
 
 button {
     // position: absolute;
     // left: 20px;
     // top: 20px;
-    // width: 100px;
-    // height: 30px;
-    // cursor: pointer;
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
 }
 

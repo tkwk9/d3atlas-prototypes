@@ -23,8 +23,9 @@ export default () => {
   let xScale, yScale, xTickFormat;
   const [data] = createResource(async () => {
     const data = await tsv(DummyStateTsvPath);
-    console.log(data);
-    const sliced = data.slice(0, 15);
+    // console.log(data.sort((a, b) => a.State < b.State ? 1 : -1));
+    // const sliced = data.slice(0, 22);
+    const sliced = data.slice(0, 22);
     yScale = scaleBand()
       .domain(sliced.map((d) => d["State"]))
       .range([0, innerHeight])
@@ -34,8 +35,8 @@ export default () => {
     xScale = scaleLinear()
       .domain([0, max(sliced, (d) => parseInt(d["2019"])) * 1.1])
       .range([0, innerWidth]);
-    console.log(xScale.ticks());
-    console.log(xScale.ticks().map((tick) => xAxisTickFormat(tick)));
+    // console.log(xScale.ticks());
+    // console.log(xScale.ticks().map((tick) => xAxisTickFormat(tick)));
     return sliced;
   });
 
@@ -100,8 +101,8 @@ export default () => {
               i.setAttribute("opacity", 0);
             }
             for (let i of document.getElementsByClassName("bar")) {
-              console.log(-1 * i.getAttribute("width"));
-              console.log(i.getAttribute("width"));
+              // console.log(-1 * i.getAttribute("width"));
+              // console.log(i.getAttribute("width"));
               anime({
                 targets: i,
                 x: [-1 * i.getAttribute("width") - 1, -100],
@@ -186,7 +187,7 @@ export default () => {
             const delayBase = 75;
             let delay = delayBase * 14;
             for (let i of document.getElementsByClassName("bar")) {
-              console.log(delay);
+              // console.log(delay);
               anime({
                 targets: i,
                 x: [-1 * i.getAttribute("width") - 1, -100],
@@ -231,24 +232,24 @@ export default () => {
             for (let i of document.getElementsByClassName("bar")) {
               anime({
                 targets: i,
-                x: [(-1 * parseFloat(i.getAttribute("width"))) - 1, -100],
+                x: [-1 * parseFloat(i.getAttribute("width")) - 1, -100],
                 duration: 1000,
                 easing: "easeOutBounce",
                 delay: i.getAttribute("width"),
 
                 // delay: anime.stagger(1, { direction: "reverse" }),
               });
-              console.log(i.getAttribute("width"));
+              // console.log(i.getAttribute("width"));
               delay -= delayBase;
             }
             delay = delayBase * 14;
             for (let i of document.getElementsByClassName("state-text")) {
-              console.log(
-                "hg",
-                document
-                  .getElementById(`${i.innerHTML}-bar`)
-                  .getAttribute("width")
-              );
+              // console.log(
+              //   "hg",
+              //   document
+              //     .getElementById(`${i.innerHTML}-bar`)
+              //     .getAttribute("width")
+              // );
               anime({
                 targets: i,
                 x: [-11, i.getAttribute("x")],
@@ -277,6 +278,65 @@ export default () => {
         >
           Animate 6
         </button>
+        <button
+          onclick={() => {
+            if (noanim) return;
+            noanim = true;
+
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 1);
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0);
+            }
+            const delayBase = 75;
+            let delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("bar")) {
+              anime({
+                targets: i,
+                x: [-1 * parseFloat(i.getAttribute("width")) - 1, -100],
+                duration: 250 + parseFloat(i.getAttribute("width")),
+                easing: "easeOutBounce",
+
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+              // console.log(i.getAttribute("width"));
+              delay -= delayBase;
+            }
+            delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("state-text")) {
+              anime({
+                targets: i,
+                x: [-11, i.getAttribute("x")],
+                duration:
+                  250 +
+                  parseFloat(
+                    document
+                      .getElementById(`${i.innerHTML}-bar`)
+                      .getAttribute("width")
+                  ),
+
+                easing: "easeOutBounce",
+                complete: () => {
+                  anime({
+                    targets: document.getElementById(`${i.innerHTML}-val`),
+                    innerHTML: ["0.0", i.innerHTML],
+                    opacity: [0.0, 1.0],
+                    easing: "linear",
+                    duration: 300,
+                    complete: () => {
+                      if (i.innerHTML === "California") noanim = false;
+                    },
+                  });
+                },
+              });
+              delay -= delayBase;
+              delay = delayBase * 14;
+            }
+          }}
+        >
+          Animate 7
+        </button>
       </div>
 
       <div
@@ -301,7 +361,7 @@ export default () => {
             dy="3"
             fill="#aaaaaa"
           >
-            Bar Chart 0.6
+            Bar Chart: BFPoS
           </text>
 
           <g
@@ -315,9 +375,9 @@ export default () => {
                 <>
                   <line
                     x1={xScale(t)}
-                    y1={innerHeight - 10}
+                    y1={innerHeight - 12}
                     x2={xScale(t)}
-                    y2={innerHeight}
+                    y2={innerHeight - 4}
                     stroke="#aaaaaa"
                   />
                 </>
