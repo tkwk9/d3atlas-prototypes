@@ -45,6 +45,12 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             noanim = true;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 0)
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0)
+            }
             anime({
               targets: `.bar`,
               scaleX: [0, 1],
@@ -61,6 +67,12 @@ export default () => {
         <button
           onclick={() => {
             if (noanim) return;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 0)
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0)
+            }
             noanim = true;
             anime({
               targets: `.bar`,
@@ -80,6 +92,12 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             noanim = true;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 1)
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0)
+            }
             for (let i of document.getElementsByClassName("bar")) {
               console.log(-1 * i.getAttribute("width"));
               console.log(i.getAttribute("width"));
@@ -122,6 +140,12 @@ export default () => {
         <button
           onclick={() => {
             if (noanim) return;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 1)
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0)
+            }
             noanim = true;
             for (let i of document.getElementsByClassName("bar")) {
               anime({
@@ -152,6 +176,12 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             noanim = true;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 1)
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0)
+            }
             const delayBase = 75;
             let delay = delayBase * 14;
             for (let i of document.getElementsByClassName("bar")) {
@@ -216,18 +246,21 @@ export default () => {
                   anime({
                     targets: document.getElementById(`${i.innerHTML}-val`),
                     innerHTML: ["0.0", i.innerHTML],
-                    opacity:[0.0, 1.0],
+                    opacity: [0.0, 1.0],
                     easing: "linear",
                     duration: 1000,
+                    complete: () => {
+                      if (i.innerHTML === "California") noanim = false;
+                    }
                   });
-                  if (i.innerHTML === "California") noanim = false;
+                  
                 },
               });
               delay -= delayBase;
               delay = delayBase * 14;
               for (let i of document.getElementsByClassName("val-text")) {
-                i.setAttribute("opacity", 0)
-                
+                i.setAttribute("opacity", 0);
+
                 delay -= delayBase;
               }
             }
@@ -249,18 +282,18 @@ export default () => {
           style={{ "background-color": "#393939" }}
         >
           <text
-          style={{
-            "text-anchor": "middle",
-            "alignment-baseline": "before-edge",
-          }}
-          x={width/2}
-          y={marginTop/4}
-          font-size="32px"
-          dy="7"
-          fill="#aaaaaa"
-        >
-          Bar Chart 0.6
-        </text>
+            style={{
+              "text-anchor": "middle",
+              "alignment-baseline": "before-edge",
+            }}
+            x={width / 2}
+            y={marginTop / 4}
+            font-size="32px"
+            dy="7"
+            fill="#aaaaaa"
+          >
+            Bar Chart 0.6
+          </text>
 
           <g
             transform={`translate(${marginLeft}, ${marginTop})`}
