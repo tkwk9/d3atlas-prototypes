@@ -29,7 +29,8 @@ export default () => {
       .domain(sliced.map((d) => d["State"]))
       .range([0, innerHeight])
       .paddingInner(0.2)
-      .paddingOuter(0.5);
+      .paddingOuter(0.2)
+      .align(0);
     xScale = scaleLinear()
       .domain([0, max(sliced, (d) => parseInt(d["2019"])) * 1.1])
       .range([0, innerWidth]);
@@ -46,10 +47,10 @@ export default () => {
             if (noanim) return;
             noanim = true;
             for (let i of document.getElementsByClassName("state-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             for (let i of document.getElementsByClassName("val-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             anime({
               targets: `.bar`,
@@ -68,10 +69,10 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             for (let i of document.getElementsByClassName("state-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             for (let i of document.getElementsByClassName("val-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             noanim = true;
             anime({
@@ -93,17 +94,17 @@ export default () => {
             if (noanim) return;
             noanim = true;
             for (let i of document.getElementsByClassName("state-text")) {
-              i.setAttribute("opacity", 1)
+              i.setAttribute("opacity", 1);
             }
             for (let i of document.getElementsByClassName("val-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             for (let i of document.getElementsByClassName("bar")) {
               console.log(-1 * i.getAttribute("width"));
               console.log(i.getAttribute("width"));
               anime({
                 targets: i,
-                x: [-1 * i.getAttribute("width"), 0],
+                x: [-1 * i.getAttribute("width") - 1, -100],
                 // x: [0, i.getAttribute("x")],
                 // opacity: [0, 1],
                 duration: 1000,
@@ -113,7 +114,7 @@ export default () => {
             for (let i of document.getElementsByClassName("state-text")) {
               anime({
                 targets: i,
-                x: [-10, i.getAttribute("x")],
+                x: [-11, i.getAttribute("x")],
                 //   scaleX: [0, 1],
                 //   opacity: [0, 1],
                 duration: 1000,
@@ -141,16 +142,16 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             for (let i of document.getElementsByClassName("state-text")) {
-              i.setAttribute("opacity", 1)
+              i.setAttribute("opacity", 1);
             }
             for (let i of document.getElementsByClassName("val-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             noanim = true;
             for (let i of document.getElementsByClassName("bar")) {
               anime({
                 targets: i,
-                x: [-1 * i.getAttribute("width"), 0],
+                x: [-1 * i.getAttribute("width") - 1, -100],
                 duration: 1000,
                 easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
@@ -159,7 +160,7 @@ export default () => {
             for (let i of document.getElementsByClassName("state-text")) {
               anime({
                 targets: i,
-                x: [-10, i.getAttribute("x")],
+                x: [-11, i.getAttribute("x")],
                 duration: 1000,
                 easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
@@ -177,10 +178,10 @@ export default () => {
             if (noanim) return;
             noanim = true;
             for (let i of document.getElementsByClassName("state-text")) {
-              i.setAttribute("opacity", 1)
+              i.setAttribute("opacity", 1);
             }
             for (let i of document.getElementsByClassName("val-text")) {
-              i.setAttribute("opacity", 0)
+              i.setAttribute("opacity", 0);
             }
             const delayBase = 75;
             let delay = delayBase * 14;
@@ -188,7 +189,7 @@ export default () => {
               console.log(delay);
               anime({
                 targets: i,
-                x: [-1 * i.getAttribute("width"), 0],
+                x: [-1 * i.getAttribute("width") - 1, -100],
                 duration: 1000,
                 easing: "easeOutBounce",
                 delay: i.getAttribute("width"),
@@ -200,9 +201,9 @@ export default () => {
             for (let i of document.getElementsByClassName("state-text")) {
               anime({
                 targets: i,
-                x: [-10, i.getAttribute("x")],
+                x: [-11, i.getAttribute("x")],
                 duration: 1000,
-                delay: i.getAttribute("x"),
+                delay: parseFloat(i.getAttribute("x")) + 100,
                 easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
                 complete: () => {
@@ -219,28 +220,42 @@ export default () => {
           onclick={() => {
             if (noanim) return;
             noanim = true;
+            for (let i of document.getElementsByClassName("state-text")) {
+              i.setAttribute("opacity", 1);
+            }
+            for (let i of document.getElementsByClassName("val-text")) {
+              i.setAttribute("opacity", 0);
+            }
             const delayBase = 75;
             let delay = delayBase * 14;
             for (let i of document.getElementsByClassName("bar")) {
-              console.log(delay);
               anime({
                 targets: i,
-                x: [-1 * i.getAttribute("width"), 0],
+                x: [(-1 * parseFloat(i.getAttribute("width"))) - 1, -100],
                 duration: 1000,
                 easing: "easeOutBounce",
                 delay: i.getAttribute("width"),
 
                 // delay: anime.stagger(1, { direction: "reverse" }),
               });
+              console.log(i.getAttribute("width"));
               delay -= delayBase;
             }
             delay = delayBase * 14;
             for (let i of document.getElementsByClassName("state-text")) {
+              console.log(
+                "hg",
+                document
+                  .getElementById(`${i.innerHTML}-bar`)
+                  .getAttribute("width")
+              );
               anime({
                 targets: i,
-                x: [-10, i.getAttribute("x")],
+                x: [-11, i.getAttribute("x")],
                 duration: 1000,
-                delay: i.getAttribute("x"),
+                delay: document
+                  .getElementById(`${i.innerHTML}-bar`)
+                  .getAttribute("width"),
                 easing: "easeOutBounce",
                 complete: () => {
                   anime({
@@ -248,21 +263,15 @@ export default () => {
                     innerHTML: ["0.0", i.innerHTML],
                     opacity: [0.0, 1.0],
                     easing: "linear",
-                    duration: 1000,
+                    duration: 300,
                     complete: () => {
                       if (i.innerHTML === "California") noanim = false;
-                    }
+                    },
                   });
-                  
                 },
               });
               delay -= delayBase;
               delay = delayBase * 14;
-              for (let i of document.getElementsByClassName("val-text")) {
-                i.setAttribute("opacity", 0);
-
-                delay -= delayBase;
-              }
             }
           }}
         >
@@ -289,7 +298,7 @@ export default () => {
             x={width / 2}
             y={marginTop / 4}
             font-size="32px"
-            dy="7"
+            dy="3"
             fill="#aaaaaa"
           >
             Bar Chart 0.6
@@ -319,15 +328,17 @@ export default () => {
                 <>
                   <rect
                     class={"bar"}
-                    x="0"
-                    rx="2"
+                    id={`${d.State}-bar`}
+                    x="-100"
+                    // ry="0"
+                    rx="10"
                     style={{ "border-radius": "5px" }}
                     y={yScale(d.State)}
-                    width={xScale(d["2019"])}
+                    width={xScale(d["2019"]) + 100}
                     height={yScale.bandwidth()}
                     fill="#c6def1"
-                    stroke="#c6def1"
-                    stroke-width="1.5"
+                    // stroke="#c6def1"
+                    // stroke-width="1.5"
                   />
                   <text
                     class="state-text"
