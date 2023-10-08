@@ -2,11 +2,11 @@ import { Show, createResource } from "solid-js";
 import { tsv, scaleLinear, scaleBand, max, formatLocale, format } from "d3";
 import DummyStateTsvPath from "../assets/state-population-2010-2019.tsv";
 import anime from "animejs";
-const width = 900;
+const width = 1200;
 const height = 900;
 
 const marginLeft = 20;
-const marginRight = 20;
+const marginRight = 120;
 const marginTop = 20;
 const marginBottom = 30;
 
@@ -109,7 +109,7 @@ export default () => {
                 targets: i,
                 x: [-1 * i.getAttribute("width"), 0],
                 duration: 1000,
-                easing: 'easeOutBounce',
+                easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
               });
             }
@@ -118,13 +118,45 @@ export default () => {
                 targets: i,
                 x: [-10, i.getAttribute("x")],
                 duration: 1000,
-                easing: 'easeOutBounce',
+                easing: "easeOutBounce",
                 // delay: anime.stagger(1, { direction: "reverse" }),
               });
             }
           }}
         >
           Animate 4
+        </button>
+        <button
+          onclick={() => {
+            const delayBase = 75;
+            let delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("bar")) {
+              console.log(delay);
+              anime({
+                targets: i,
+                x: [-1 * i.getAttribute("width"), 0],
+                duration: 1000,
+                easing: "easeOutBounce",
+                delay: i.getAttribute("width"),
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+              delay -= delayBase;
+            }
+            delay = delayBase * 14;
+            for (let i of document.getElementsByClassName("state-text")) {
+              anime({
+                targets: i,
+                x: [-10, i.getAttribute("x")],
+                duration: 1000,
+                delay: i.getAttribute("x"),
+                easing: "easeOutBounce",
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+              delay -= delayBase;
+            }
+          }}
+        >
+          Animate 5
         </button>
       </div>
 
@@ -140,7 +172,7 @@ export default () => {
           style={{ "background-color": "#B1BCBE" }}
         >
           <g
-            transform={`translate(${marginLeft}, ${marginRight})`}
+            transform={`translate(${marginLeft}, ${marginTop})`}
             x={marginLeft}
             y={marginTop}
           >
