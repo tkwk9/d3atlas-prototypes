@@ -102,6 +102,30 @@ export default () => {
         >
           Animate 3
         </button>
+        <button
+          onclick={() => {
+            for (let i of document.getElementsByClassName("bar")) {
+              anime({
+                targets: i,
+                x: [-1 * i.getAttribute("width"), 0],
+                duration: 1000,
+                easing: 'easeOutBounce',
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+            }
+            for (let i of document.getElementsByClassName("state-text")) {
+              anime({
+                targets: i,
+                x: [-10, i.getAttribute("x")],
+                duration: 1000,
+                easing: 'easeOutBounce',
+                // delay: anime.stagger(1, { direction: "reverse" }),
+              });
+            }
+          }}
+        >
+          Animate 4
+        </button>
       </div>
 
       <div

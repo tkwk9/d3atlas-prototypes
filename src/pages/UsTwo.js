@@ -171,6 +171,7 @@ const UsTwo = (props) => {
     <>
       {/* TODO: Remove */}
       <button
+        class="mapbutton"
         onclick={() => {
           if (state.zoneStack.length <= 1) return;
           setState((prevState) => {

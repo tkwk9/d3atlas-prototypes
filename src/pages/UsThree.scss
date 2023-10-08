@@ -16,13 +16,14 @@
   }
 }
 
-button {
-  // position: absolute;
-  // left: 20px;
-  // top: 20px;
+.mapbutton {
+  position: absolute;
+  left: 20px;
+  top: 20px;
   width: 100px;
   height: 30px;
   cursor: pointer;
+
 }
 
 text {

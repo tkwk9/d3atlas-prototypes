@@ -165,6 +165,7 @@ const UsThree = (props) => {
     <>
       {/* TODO: Remove */}
       <button
+        class="mapbutton"
         onclick={() => {
           if (state.zoneStack.length <= 1) return;
           setState((prevState) => {
@@ -198,7 +199,10 @@ const UsThree = (props) => {
       >
         <g id={`gUS`} class={`UsThree-nationGroup UsThree-zoneGroup`}>
           {Object.entries(props.fips).map(([stateId, v]) => (
-            <g id={`g${stateId}`} class={`UsThree-stateGroup UsThree-zoneGroup`}>
+            <g
+              id={`g${stateId}`}
+              class={`UsThree-stateGroup UsThree-zoneGroup`}
+            >
               <path
                 id={stateId}
                 class={`UsThree-state UsThree-zone ${v.name}`}
