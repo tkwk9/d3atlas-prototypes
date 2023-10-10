@@ -11,6 +11,10 @@
   &-state {
   }
   &-county {
+    &.disabled {
+      fill: #636b7855;
+      pointer-events: none;
+    }
     &.selected {
       // fill: red;
     }

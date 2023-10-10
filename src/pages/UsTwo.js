@@ -143,7 +143,9 @@ const UsTwo = (props) => {
         easing: "easeInQuad",
       });
       anime({
-        targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(prevState)}`,
+        targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(
+          prevState
+        )}`,
         strokeWidth: getCurrentZoneType(prevState) === "state" ? 0.5 : 0.1,
         duration: 500,
         easing: "easeInQuad",
@@ -167,7 +169,7 @@ const UsTwo = (props) => {
     });
     anime({
       targets: `#s${getCurrentZoneId(state)}, #c${getCurrentZoneId(state)}`,
-      strokeWidth: getCurrentZoneType(state) === "state" ? "3" : "1",
+      strokeWidth: getCurrentZoneType(state) === "state" ? 2 : 1,
       duration: 500,
       easing: "easeInQuad",
     });
@@ -197,8 +199,11 @@ const UsTwo = (props) => {
               easing: "easeInQuad",
             });
             anime({
-              targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(prevState)}`,
-              strokeWidth: getCurrentZoneType(prevState) === "state" ? 0.5 : 0.1,
+              targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(
+                prevState
+              )}`,
+              strokeWidth:
+                getCurrentZoneType(prevState) === "state" ? 0.5 : 0.1,
               duration: 500,
               easing: "easeInQuad",
             });
@@ -248,7 +253,13 @@ const UsTwo = (props) => {
                 >
                   <path
                     id={`c${countyId}`}
-                    class={`UsTwo-county UsTwo-zone ${v.name}`}
+                    class={`UsTwo-county UsTwo-zone ${v.name} ${
+                      getCurrentVisibleZoneType(state) === "county" &&
+                      (getCurrentZoneId(state) !== stateId &&
+                        getCurrentZoneId(state) !== countyId)
+                        ? "disabled"
+                        : ""
+                    }`}
                     data-zone-type="county"
                     data-zone-id={countyId}
                     data-zone-name={v.name}
