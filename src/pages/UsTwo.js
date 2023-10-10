@@ -169,7 +169,7 @@ const UsTwo = (props) => {
     });
     anime({
       targets: `#s${getCurrentZoneId(state)}, #c${getCurrentZoneId(state)}`,
-      strokeWidth: getCurrentZoneType(state) === "state" ? 2 : 1,
+      strokeWidth: getCurrentZoneType(state) === "state" ? 2 : 0.4,
       duration: 500,
       easing: "easeInQuad",
     });
@@ -238,7 +238,7 @@ const UsTwo = (props) => {
                 data-zone-abbr={v.abbr}
                 onclick={handleZoneClick}
                 d={path(topojson.feature(UsTopoJson, v.geometry))}
-                stroke="#242722"
+                stroke="#393939"
                 stroke-width="0.5"
                 fill={
                   getCurrentVisibleZoneType(state) === "state"
@@ -266,7 +266,7 @@ const UsTwo = (props) => {
                     data-zone-abbr={v.abbr}
                     onclick={handleZoneClick}
                     d={path(topojson.feature(UsTopoJson, v.geometry))}
-                    stroke="#242722"
+                    stroke="#393939"
                     stroke-width="0.1"
                     fill={
                       getCurrentVisibleZoneType(state) === "county"

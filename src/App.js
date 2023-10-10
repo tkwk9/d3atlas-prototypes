@@ -4,6 +4,7 @@ import UsOne from "./pages/UsOne.js";
 import UsTwo from "./pages/UsTwo.js";
 import UsThree from "./pages/UsThree.js";
 import BarChartAnimation from "./pages/BarChartAnimation.js";
+import Comparator from "./pages/Comparator.js";
 import "./App.scss";
 
 const NavBar = () => (
@@ -12,6 +13,7 @@ const NavBar = () => (
     <A href="/us_1">US-1</A>
     <A href="/us_2">US-2</A>
     <A href="/bar_chart_animation">BarChartAnimation</A>
+    <A href="/comparator">Comparator</A>
     {/* <A href="/us_3">US-3</A> */}
   </div>
 );
@@ -33,6 +35,7 @@ const Content = () => {
         <Route path="/us_2/:stateId?/:countyId?" end component={UsTwo} />
         <Route path="/us_3/:stateId?/:countyId?" end component={UsThree} />
         <Route path="/bar_chart_animation" end component={BarChartAnimation} />
+        <Route path="/comparator" end component={Comparator} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
