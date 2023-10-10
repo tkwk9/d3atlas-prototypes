@@ -142,6 +142,12 @@ const UsTwo = (props) => {
         duration: 500,
         easing: "easeInQuad",
       });
+      anime({
+        targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(prevState)}`,
+        strokeWidth: getCurrentZoneType(prevState) === "state" ? 0.5 : 0.1,
+        duration: 500,
+        easing: "easeInQuad",
+      });
       return { zoneStack };
     });
 
@@ -156,6 +162,12 @@ const UsTwo = (props) => {
       targets: `#g${getCurrentZoneId(state)}`,
       translateX: `${translateOffset}px`,
       translateY: `-${translateOffset}px`,
+      duration: 500,
+      easing: "easeInQuad",
+    });
+    anime({
+      targets: `#s${getCurrentZoneId(state)}, #c${getCurrentZoneId(state)}`,
+      strokeWidth: getCurrentZoneType(state) === "state" ? "3" : "1",
       duration: 500,
       easing: "easeInQuad",
     });
@@ -184,6 +196,12 @@ const UsTwo = (props) => {
               duration: 500,
               easing: "easeInQuad",
             });
+            anime({
+              targets: `#s${getCurrentZoneId(prevState)}, #c${getCurrentZoneId(prevState)}`,
+              strokeWidth: getCurrentZoneType(prevState) === "state" ? 0.5 : 0.1,
+              duration: 500,
+              easing: "easeInQuad",
+            });
             return { zoneStack };
           });
           anime({
@@ -207,7 +225,7 @@ const UsTwo = (props) => {
           {Object.entries(props.fips).map(([stateId, v]) => (
             <g id={`g${stateId}`} class={`UsTwo-stateGroup UsTwo-zoneGroup`}>
               <path
-                id={stateId}
+                id={`s${stateId}`}
                 class={`UsTwo-state UsTwo-zone ${v.name}`}
                 data-zone-type="state"
                 data-zone-id={stateId}
@@ -229,7 +247,7 @@ const UsTwo = (props) => {
                   class={`UsTwo-countyGroup UsTwo-zoneGroup`}
                 >
                   <path
-                    id={countyId}
+                    id={`c${countyId}`}
                     class={`UsTwo-county UsTwo-zone ${v.name}`}
                     data-zone-type="county"
                     data-zone-id={countyId}

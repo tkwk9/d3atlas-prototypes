@@ -129,13 +129,13 @@ const UsThree = (props) => {
         ...prevState.zoneStack,
         { zoneId, zoneType, zoneName, zoneAbbr, zoneViewBox },
       ];
-      anime({
-        targets: `#g${getCurrentZoneId(prevState)}`,
-        translateX: `0px`,
-        translateY: `0px`,
-        duration: 500,
-        easing: "easeInQuad",
-      });
+      // anime({
+      //   targets: `#g${getCurrentZoneId(prevState)}`,
+      //   translateX: `0px`,
+      //   translateY: `0px`,
+      //   duration: 500,
+      //   easing: "easeInQuad",
+      // });
       return { zoneStack };
     });
 
@@ -146,13 +146,13 @@ const UsThree = (props) => {
 
     // Animate
     const translateOffset = getCurrentZoneTypeOffset(state);
-    anime({
-      targets: `#g${getCurrentZoneId(state)}`,
-      translateX: `${translateOffset}px`,
-      translateY: `-${translateOffset}px`,
-      duration: 500,
-      easing: "easeInQuad",
-    });
+    // anime({
+    //   targets: `#g${getCurrentZoneId(state)}`,
+    //   translateX: `${translateOffset}px`,
+    //   translateY: `-${translateOffset}px`,
+    //   duration: 500,
+    //   easing: "easeInQuad",
+    // });
     anime({
       targets: "#MainSVG",
       viewBox: getCurrentZoneViewBox(state),
@@ -171,13 +171,13 @@ const UsThree = (props) => {
           setState((prevState) => {
             const zoneStack = [prevState.zoneStack[0]];
             document.getElementById(`zoneCushion`)?.remove();
-            anime({
-              targets: `#g${getCurrentZoneId(prevState)}`,
-              translateX: `0px`,
-              translateY: `0px`,
-              duration: 500,
-              easing: "easeInQuad",
-            });
+            // anime({
+            //   targets: `#g${getCurrentZoneId(prevState)}`,
+            //   translateX: `0px`,
+            //   translateY: `0px`,
+            //   duration: 500,
+            //   easing: "easeInQuad",
+            // });
             return { zoneStack };
           });
           anime({
