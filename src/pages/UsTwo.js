@@ -238,11 +238,11 @@ const UsTwo = (props) => {
                 data-zone-abbr={v.abbr}
                 onclick={handleZoneClick}
                 d={path(topojson.feature(UsTopoJson, v.geometry))}
-                stroke="#aaa"
+                stroke="#242722"
                 stroke-width="0.5"
                 fill={
                   getCurrentVisibleZoneType(state) === "state"
-                    ? "#766378"
+                    ? "#8294C4"
                     : "None"
                 }
               />
@@ -266,11 +266,11 @@ const UsTwo = (props) => {
                     data-zone-abbr={v.abbr}
                     onclick={handleZoneClick}
                     d={path(topojson.feature(UsTopoJson, v.geometry))}
-                    stroke="#aaa"
+                    stroke="#242722"
                     stroke-width="0.1"
                     fill={
                       getCurrentVisibleZoneType(state) === "county"
-                        ? "#636b78"
+                        ? "#8294C4"
                         : "None"
                     }
                   />
