@@ -10,10 +10,7 @@
     top: 50px;
     color: #101010;
   }
-  .box {
-    // background-color: red;
-  }
-  .wrapper {
+  .Wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,16 +18,25 @@
     height: 100px;
     border: black 2px dashed;
   }
-  .content {
+  .box {
     width: 95px;
     height: 95px;
     border-radius: 10px;
     background-color: rgb(110, 180, 158);
-    transition: border-radius 0.6s cubic-bezier(0.96, 2, 0.36, 0.25);
+    transition: border-radius 0.6s cubic-bezier(0.96, 2, 0.36, 0.25), background-color 0.3s cubic-bezier(0.96, 2, 0.36, 0.25);
     &:hover {
       border-radius: 15px;
       background-color: rgb(210, 188, 192);
       cursor: pointer;
+    }
+    &:active:hover {
+     
+      border-radius: 35px;
+      background-color: rgb(206, 142, 154);
+      transition: border-radius 0.2s cubic-bezier(0.96, 2, 0.36, 0.25)
+    }
+    &.selected {
+        position:fixed;
     }
   }
 }
