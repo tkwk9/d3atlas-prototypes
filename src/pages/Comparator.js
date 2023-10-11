@@ -16,19 +16,29 @@ const Box = () => {
       setRightPad(e.clientX - theBox.getBoundingClientRect().left);
     });
     theBox.addEventListener("mouseup", (e) => {
+        const theWrapper = document.getElementById("wrapper1");
       console.log("mouseup");
       setIsGrabbed(false);
+      theBox.setAttribute(
+        "style",
+        `top: ${theWrapper.getBoundingClientRect().top}px; left: ${theWrapper.getBoundingClientRect().left}px`
+      );
     });
-    theBox.addEventListener("mousemove", (e) => {
+    // theBox.addEventListener("mouseleave", (e) => {
+    //     const theWrapper = document.getElementById("wrapper1");
+    //   console.log("mouseup");
+    //   setIsGrabbed(false);
+    //   theBox.setAttribute(
+    //     "style",
+    //     `top: ${theWrapper.getBoundingClientRect().top}px; left: ${theWrapper.getBoundingClientRect().left}px`
+    //   );
+    // });
+    document.addEventListener("mousemove", (e) => {
       if (isGrabbed()) {
         console.log(e);
         theBox.setAttribute(
           "style",
-          `top: ${
-            e.clientY - leftPad()
-          }px; left: ${
-            e.clientX - rightPad()
-          }px`
+          `top: ${e.clientY - leftPad()}px; left: ${e.clientX - rightPad()}px`
         );
       }
     });
@@ -39,7 +49,7 @@ const Box = () => {
 
 const Wrapper = () => {
   return (
-    <div class="Wrapper">
+    <div id="wrapper1" class="Wrapper">
       <Box />
     </div>
   );
