@@ -40,9 +40,11 @@
     // &.selected {
     //     position:fixed;
     // }
-    // &.intransit {
-    //     position:fixed;
-    // }
+    &.intransit {
+      width: 71.25px;
+      height: 71.25px;
+      border-radius: 35px;
+    }
     position:fixed
   }
 }

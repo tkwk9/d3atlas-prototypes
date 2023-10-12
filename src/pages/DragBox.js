@@ -11,10 +11,12 @@ const Box = () => {
     theBox.addEventListener("mousedown", (e) => {
       console.log("mousedown");
       setIsGrabbed(true);
-      
+
       theBox.setAttribute(
         "style",
-        `top: ${e.clientY - 35.625}px; left: ${e.clientX - 35.625}px; position: fixed`
+        `top: ${e.clientY - 35.625}px; left: ${
+          e.clientX - 35.625
+        }px; position: fixed`
       );
     });
 
@@ -22,19 +24,32 @@ const Box = () => {
       console.log("mouseup");
       const theWrapper = document.getElementById("wrapper1");
       setIsGrabbed(false);
-      theBox.classList.add("intrasit");
+      theBox.classList.add("intransit");
+      anime({
+        targets: `#box1`,
+        // top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
+        // left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
+        delay: 150,
+        width: "95px",
+        height: "47.5px",
+        duration: 150,
+        // easing: "easeOutElastic(1, .6)",
+        // complete: () => {
+        //   theBox.classList.remove("intransit");
+        //   theBox.setAttribute("style", `position: absolute`);
+        // },
+      });
       anime({
         targets: `#box1`,
         top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
         left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
-        duration: 75,
-        easing: "easeInQuad",
+        // width: "95px",
+        // height: "47.5px",
+        duration: 300,
+        easing: "easeOutElastic(1, .6)",
         complete: () => {
-          theBox.classList.remove("intrasit");
-          theBox.setAttribute(
-            "style",
-            `position: absolute`
-          );
+          theBox.classList.remove("intransit");
+          theBox.setAttribute("style", `position: absolute`);
         },
       });
     });
