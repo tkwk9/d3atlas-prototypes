@@ -37,8 +37,12 @@
       background-color: rgb(206, 142, 154);
       transition: border-radius 0.2s cubic-bezier(0.96, 2, 0.36, 0.25)
     }
-    &.selected {
-        position:fixed;
-    }
+    // &.selected {
+    //     position:fixed;
+    // }
+    // &.intransit {
+    //     position:fixed;
+    // }
+    position:fixed
   }
 }

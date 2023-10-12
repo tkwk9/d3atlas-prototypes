@@ -1,32 +1,42 @@
 import { onMount, createSignal } from "solid-js";
+import anime from "animejs";
 
 import "./DragBox.scss";
-let anchor = { x: 0, y: 0 };
 
 const Box = () => {
   const [isGrabbed, setIsGrabbed] = createSignal(false);
-  const [leftPad, setLeftPad] = createSignal(0);
-  const [rightPad, setRightPad] = createSignal(0);
 
   onMount(() => {
     const theBox = document.getElementById("box1");
     theBox.addEventListener("mousedown", (e) => {
       console.log("mousedown");
       setIsGrabbed(true);
-      setLeftPad(e.clientY - theBox.getBoundingClientRect().top);
-      setRightPad(e.clientX - theBox.getBoundingClientRect().left);
+      
+      theBox.setAttribute(
+        "style",
+        `top: ${e.clientY - 35.625}px; left: ${e.clientX - 35.625}px; position: fixed`
+      );
     });
 
     theBox.addEventListener("mouseup", (e) => {
       console.log("mouseup");
       const theWrapper = document.getElementById("wrapper1");
       setIsGrabbed(false);
-      theBox.setAttribute(
-        "style",
-        `top: ${theWrapper.getBoundingClientRect().top}px; left: ${
-          theWrapper.getBoundingClientRect().left
-        }px`
-      );
+      theBox.classList.add("intrasit");
+      anime({
+        targets: `#box1`,
+        top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
+        left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
+        duration: 75,
+        easing: "easeInQuad",
+        complete: () => {
+          theBox.classList.remove("intrasit");
+          theBox.setAttribute(
+            "style",
+            `position: absolute`
+          );
+        },
+      });
     });
 
     document.addEventListener("mousemove", (e) => {
@@ -34,13 +44,13 @@ const Box = () => {
         console.log(e);
         theBox.setAttribute(
           "style",
-          `top: ${e.clientY - leftPad()}px; left: ${e.clientX - rightPad()}px`
+          `top: ${e.clientY - 35.625}px; left: ${e.clientX - 35.625}px`
         );
       }
     });
   });
 
-  return <div id="box1" class={`box ${isGrabbed() ? "selected" : ""}`} />;
+  return <div id="box1" class={`box`} />;
 };
 
 const Wrapper = () => {
@@ -54,7 +64,7 @@ const Wrapper = () => {
 const DragBox = () => {
   return (
     <div class="DragBox">
-      <h1 class="title">DragBox: GoFCSSPJS</h1>
+      <h1 class="title">DragBox: A</h1>
       <Wrapper />
     </div>
   );
