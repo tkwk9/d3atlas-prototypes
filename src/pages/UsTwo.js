@@ -51,7 +51,7 @@ const zoneTypeToOffset = {
 };
 
 const getCurrentZoneTypeOffset = (state) =>
-  zoneTypeToOffset[state.zoneStack[state.zoneStack.length - 1].zoneType];
+zoneTypeToOffset[state.zoneStack[state.zoneStack.length - 1].zoneType];
 const getCurrentVisibleZoneType = (state) =>
   currentVisibleZoneTypes[state.zoneStack[state.zoneStack.length - 1].zoneType];
 const getCurrentZoneType = (state) =>
@@ -60,8 +60,8 @@ const getCurrentZoneId = (state) =>
   state.zoneStack[state.zoneStack.length - 1].zoneId;
 const getCurrentZoneViewBox = (state) =>
   state.zoneStack[state.zoneStack.length - 1].zoneViewBox;
-
-// Data Fetcher
+  
+  // Data Fetcher
 const getFips = async () => {
   const data = await csv(FipsCsvPath);
   const countyGeometries = UsTopoJson.objects.counties.geometries.reduce(
