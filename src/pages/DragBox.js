@@ -46,10 +46,10 @@ const Box = (props) => {
         targets: `#box${props.boxId}`,
         // top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
         // left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
-        delay: 150,
+        delay: 75,
         width: "95px",
         height: "47.5px",
-        duration: 150,
+        duration: 75,
         // easing: "easeOutElastic(1, .6)",
         // complete: () => {
         //   theBox.classList.remove("intransit");
@@ -62,7 +62,7 @@ const Box = (props) => {
         left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
         // width: "95px",
         // height: "47.5px",
-        duration: 300,
+        duration: 150,
         easing: "easeOutElastic(1, .6)",
         complete: () => {
           theBox.classList.remove("intransit");
@@ -96,21 +96,21 @@ const Wrapper = (props) => {
 const DragBox = () => {
   return (
     <div class="DragBox">
-      <h1 class="title">Drag n' Drop: A2</h1>
+      <h1 class="title">Drag-and-Drop: A2</h1>
       <div style={{ display: "flex", "flex-direction": "row" }}>
         <Wrapper wrapperId={1} />
-        <div style={{ height: "100px", width: "500px" }} />
+        <div style={{ height: "100px", width: "600px" }} />
         <Wrapper wrapperId={2} />
       </div>
       <div
         style={{
           display: "flex",
           "flex-direction": "row",
-          "margin-top": "200px",
+          "margin-top": "250px",
         }}
       >
         <Wrapper wrapperId={3} />
-        <div style={{ height: "100px", width: "500px" }} />
+        <div style={{ height: "100px", width: "600px" }} />
         <Wrapper wrapperId={4} />
       </div>
     </div>
