@@ -11,13 +11,14 @@
     color: rgb(162, 162, 162);
   }
   .Wrapper {
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 101px;
-    height: 52px;
+    width: 112px;
+    height: 66px;
     border: rgb(162, 162, 162) 2px dashed;
-    border-radius: 14px;
+    border-radius: 20px;
     &.target {
       border-width: 4px;
     }

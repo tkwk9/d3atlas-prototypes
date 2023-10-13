@@ -122,7 +122,7 @@ const DragBox = () => {
       <h1 class="title">Drag-and-Drop: A2</h1>
       <div style={{ display: "flex", "flex-direction": "row" }}>
         <Wrapper wrapperId={1} />
-        <div style={{ height: "100px", width: "600px" }} />
+        <div style={{ height: "150px", width: "600px" }} />
         <Wrapper wrapperId={2} />
       </div>
       <div
@@ -133,7 +133,7 @@ const DragBox = () => {
         }}
       >
         <Wrapper wrapperId={3} />
-        <div style={{ height: "100px", width: "600px" }} />
+        <div style={{ height: "150px", width: "600px" }} />
         <Wrapper wrapperId={4} />
       </div>
     </div>
