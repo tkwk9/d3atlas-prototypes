@@ -1,16 +1,15 @@
 import { onMount, createSignal } from "solid-js";
 import anime from "animejs";
-import Victor from "victor";
 
 import "./DragBox.scss";
 
-const Box = (props) => {
+const Box = () => {
   const [isGrabbed, setIsGrabbed] = createSignal(false);
 
   onMount(() => {
-    const theBox = document.getElementById(`box${props.boxId}`);
+    const theBox = document.getElementById("box1");
     theBox.addEventListener("mousedown", (e) => {
-      // console.log("mousedown");
+      console.log("mousedown");
       setIsGrabbed(true);
 
       theBox.setAttribute(
@@ -22,28 +21,12 @@ const Box = (props) => {
     });
 
     theBox.addEventListener("mouseup", (e) => {
-      // console.log("mouseup");
-      let theWrapper;
-      let dist = 10000000;
-      document.querySelectorAll(".Wrapper").forEach((el) => {
-        const a = new Victor(
-          el.getBoundingClientRect().left,
-          el.getBoundingClientRect().top
-        );
-        const b = new Victor(e.clientX, e.clientY);
-        if (dist > a.distance(b)) {
-          dist = a.distance(b);
-          theWrapper = el;
-        }
-      });
-
-      theWrapper.appendChild(theBox);
-
-      // const theWrapper = document.getElementById(`wrapper${props.boxId}`);
+      console.log("mouseup");
+      const theWrapper = document.getElementById("wrapper1");
       setIsGrabbed(false);
       theBox.classList.add("intransit");
       anime({
-        targets: `#box${props.boxId}`,
+        targets: `#box1`,
         // top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
         // left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
         delay: 150,
@@ -57,7 +40,7 @@ const Box = (props) => {
         // },
       });
       anime({
-        targets: `#box${props.boxId}`,
+        targets: `#box1`,
         top: `${theWrapper.getBoundingClientRect().top + 2.5}px`,
         left: `${theWrapper.getBoundingClientRect().left + 2.5}px`,
         // width: "95px",
@@ -73,7 +56,7 @@ const Box = (props) => {
 
     document.addEventListener("mousemove", (e) => {
       if (isGrabbed()) {
-        // console.log(e);
+        console.log(e);
         theBox.setAttribute(
           "style",
           `top: ${e.clientY - 35.625}px; left: ${e.clientX - 35.625}px`
@@ -82,13 +65,13 @@ const Box = (props) => {
     });
   });
 
-  return <div id={`box${props.boxId}`} class={`box`} />;
+  return <div id="box1" class={`box`} />;
 };
 
-const Wrapper = (props) => {
+const Wrapper = () => {
   return (
-    <div id={`wrapper${props.wrapperId}`} class="Wrapper">
-      {props.wrapperId === 1 ? <Box boxId={props.wrapperId} /> : null}
+    <div id="wrapper1" class="Wrapper">
+      <Box />
     </div>
   );
 };
@@ -96,23 +79,8 @@ const Wrapper = (props) => {
 const DragBox = () => {
   return (
     <div class="DragBox">
-      <h1 class="title">Drag n' Drop: A2</h1>
-      <div style={{ display: "flex", "flex-direction": "row" }}>
-        <Wrapper wrapperId={1} />
-        <div style={{ height: "100px", width: "500px" }} />
-        <Wrapper wrapperId={2} />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          "flex-direction": "row",
-          "margin-top": "200px",
-        }}
-      >
-        <Wrapper wrapperId={3} />
-        <div style={{ height: "100px", width: "500px" }} />
-        <Wrapper wrapperId={4} />
-      </div>
+      <h1 class="title">DragBox: A</h1>
+      <Wrapper />
     </div>
   );
 };

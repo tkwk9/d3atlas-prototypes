@@ -1,0 +1,50 @@
+.DragBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Courier New", Courier, monospace;
+  .title {
+    font-size: 36px;
+    position: absolute;
+    top: 50px;
+    color: rgb(162, 162, 162);
+  }
+  .Wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 50px;
+    border: rgb(162, 162, 162) 2px dashed;
+  }
+  .box {
+    width: 95px;
+    height: 47.5px;
+    border-radius: 10px;
+    background-color: rgb(110, 180, 158);
+    transition: border-radius 0.2s cubic-bezier(0.96, 2, 0.36, 0.25), background-color 0.3s cubic-bezier(0.96, 2, 0.36, 0.25);
+    &:hover {
+      border-radius: 15px;
+      background-color: rgb(210, 188, 192);
+      transition: border-radius 0.2s cubic-bezier(0.96, 2, 0.36, 0.25);
+      cursor: pointer;
+    }
+    &:active:hover {
+      width: 71.25px;
+      height: 71.25px;
+      border-radius: 35px;
+      background-color: rgb(206, 142, 154);
+      transition: border-radius 0.2s cubic-bezier(0.96, 2, 0.36, 0.25)
+    }
+    // &.selected {
+    //     position:fixed;
+    // }
+    &.intransit {
+      width: 71.25px;
+      height: 71.25px;
+      border-radius: 35px;
+    }
+    position:fixed
+  }
+}
