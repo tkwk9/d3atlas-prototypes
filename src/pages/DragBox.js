@@ -71,6 +71,8 @@ const Box = (props) => {
       });
     });
 
+    let currentWrapper;
+
     document.addEventListener("mousemove", (e) => {
       if (isGrabbed()) {
         // console.log(e);
@@ -78,6 +80,24 @@ const Box = (props) => {
           "style",
           `top: ${e.clientY - 35.625}px; left: ${e.clientX - 35.625}px`
         );
+        let theWrapper;
+        let dist = 10000000;
+        document.querySelectorAll(".Wrapper").forEach((el) => {
+          const a = new Victor(
+            el.getBoundingClientRect().left,
+            el.getBoundingClientRect().top
+          );
+          const b = new Victor(e.clientX, e.clientY);
+          if (dist > a.distance(b)) {
+            dist = a.distance(b);
+            theWrapper = el;
+          }
+        });
+        if (theWrapper === currentWrapper) return;
+        console.log(theWrapper);
+        currentWrapper?.classList?.remove("target");
+        theWrapper?.classList?.add("target");
+        currentWrapper = theWrapper;
       }
     });
   });
@@ -87,7 +107,10 @@ const Box = (props) => {
 
 const Wrapper = (props) => {
   return (
-    <div id={`wrapper${props.wrapperId}`} class="Wrapper">
+    <div
+      id={`wrapper${props.wrapperId}`}
+      class={`Wrapper ${props.wrapperId === 1 ? "target" : ""}`}
+    >
       {props.wrapperId === 1 ? <Box boxId={props.wrapperId} /> : null}
     </div>
   );
