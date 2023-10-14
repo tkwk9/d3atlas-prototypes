@@ -6,6 +6,7 @@ import UsThree from "./pages/UsThree.js";
 import BarChartAnimation from "./pages/BarChartAnimation.js";
 import DragBox from "./pages/DragBox.js";
 import Console from "./pages/Console.js";
+import Minesweeper from "./pages/Minesweeper.js";
 import "./App.scss";
 
 const NavBar = () => (
@@ -16,6 +17,7 @@ const NavBar = () => (
     <A href="/bar_chart_animation">BarChartAnimation</A>
     <A href="/comparator">DragBox</A>
     <A href="/console">Console</A>
+    <A href="/minesweeper">Minesweeper</A>
     {/* <A href="/us_3">US-3</A> */}
   </div>
 );
@@ -39,6 +41,7 @@ const Content = () => {
         <Route path="/bar_chart_animation" end component={BarChartAnimation} />
         <Route path="/comparator" end component={DragBox} />
         <Route path="/console" end component={Console} />
+        <Route path="/minesweeper" end component={Minesweeper} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>

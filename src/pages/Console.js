@@ -1,7 +1,3 @@
-import { onMount, createSignal } from "solid-js";
-import anime from "animejs";
-import Victor from "victor";
-
 import "./Console.scss";
 
 const Console = () => {
