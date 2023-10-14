@@ -1,4 +1,4 @@
-.Table {
+.Console {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,6 +11,7 @@
       border: 1px rgb(162, 162, 162) solid;
     }
     td {
+      vertical-align: middle;
       padding: 8px 16px;
       border: 1px rgb(162, 162, 162) solid;
     }
