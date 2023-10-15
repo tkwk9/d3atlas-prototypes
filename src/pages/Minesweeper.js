@@ -1,11 +1,40 @@
 import { createStore } from "solid-js/store";
+import cloneDeep from "clone-deep";
 import anime from "animejs";
 import Victor from "victor";
 
 import "./Minesweeper.scss";
 
-const Minesweeper = () => {
-  const tmpMap = [
+const getCurrentBoardState = (state) => {
+  return state.boardStateStack[state.boardStateStack.length - 1];
+};
+
+const untouchedBoard = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+
+const createGameMap = () => {
+  const gameMap = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+
+  [
     [null, null, "M", null, null, null, null, null, null],
     [null, null, null, null, null, null, "M", null, null],
     [null, null, null, null, null, "M", null, null, null],
@@ -15,95 +44,88 @@ const Minesweeper = () => {
     [null, null, null, null, null, null, null, null, 1],
     [null, null, null, null, 1, null, null, null, null],
     [null, null, null, null, null, 1, null, null, null],
-  ];
-
-  const map = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-
-  const [gameState, setGameState] = createStore({
-    gameState: [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ],
-  });
-
-  tmpMap.forEach((row, rowIdx) =>
+  ].forEach((row, rowIdx) =>
     row.forEach((cellData, columnIdx) => {
       if (cellData === "M") {
-        map[rowIdx][columnIdx] = "M";
+        gameMap[rowIdx][columnIdx] = "M";
         if (
-          map[rowIdx - 1] &&
-          map[rowIdx - 1][columnIdx - 1] !== undefined &&
-          map[rowIdx - 1][columnIdx - 1] !== "M"
+          gameMap[rowIdx - 1] &&
+          gameMap[rowIdx - 1][columnIdx - 1] !== undefined &&
+          gameMap[rowIdx - 1][columnIdx - 1] !== "M"
         )
-          map[rowIdx - 1][columnIdx - 1] += 1;
+          gameMap[rowIdx - 1][columnIdx - 1] += 1;
         if (
-          map[rowIdx - 1] &&
-          map[rowIdx - 1][columnIdx] !== undefined &&
-          map[rowIdx - 1][columnIdx] !== "M"
+          gameMap[rowIdx - 1] &&
+          gameMap[rowIdx - 1][columnIdx] !== undefined &&
+          gameMap[rowIdx - 1][columnIdx] !== "M"
         )
-          map[rowIdx - 1][columnIdx] += 1;
+          gameMap[rowIdx - 1][columnIdx] += 1;
         if (
-          map[rowIdx - 1] &&
-          map[rowIdx - 1][columnIdx + 1] !== undefined &&
-          map[rowIdx - 1][columnIdx + 1] !== "M"
+          gameMap[rowIdx - 1] &&
+          gameMap[rowIdx - 1][columnIdx + 1] !== undefined &&
+          gameMap[rowIdx - 1][columnIdx + 1] !== "M"
         )
-          map[rowIdx - 1][columnIdx + 1] += 1;
+          gameMap[rowIdx - 1][columnIdx + 1] += 1;
         if (
-          map[rowIdx] &&
-          map[rowIdx][columnIdx - 1] !== undefined &&
-          map[rowIdx][columnIdx - 1] !== "M"
+          gameMap[rowIdx] &&
+          gameMap[rowIdx][columnIdx - 1] !== undefined &&
+          gameMap[rowIdx][columnIdx - 1] !== "M"
         )
-          map[rowIdx][columnIdx - 1] += 1;
+          gameMap[rowIdx][columnIdx - 1] += 1;
         if (
-          map[rowIdx] &&
-          map[rowIdx][columnIdx + 1] !== undefined &&
-          map[rowIdx][columnIdx + 1] !== "M"
+          gameMap[rowIdx] &&
+          gameMap[rowIdx][columnIdx + 1] !== undefined &&
+          gameMap[rowIdx][columnIdx + 1] !== "M"
         )
-          map[rowIdx][columnIdx + 1] += 1;
+          gameMap[rowIdx][columnIdx + 1] += 1;
         if (
-          map[rowIdx + 1] &&
-          map[rowIdx + 1][columnIdx - 1] !== undefined &&
-          map[rowIdx + 1][columnIdx - 1] !== "M"
+          gameMap[rowIdx + 1] &&
+          gameMap[rowIdx + 1][columnIdx - 1] !== undefined &&
+          gameMap[rowIdx + 1][columnIdx - 1] !== "M"
         )
-          map[rowIdx + 1][columnIdx - 1] += 1;
+          gameMap[rowIdx + 1][columnIdx - 1] += 1;
         if (
-          map[rowIdx + 1] &&
-          map[rowIdx + 1][columnIdx] !== undefined &&
-          map[rowIdx + 1][columnIdx] !== "M"
+          gameMap[rowIdx + 1] &&
+          gameMap[rowIdx + 1][columnIdx] !== undefined &&
+          gameMap[rowIdx + 1][columnIdx] !== "M"
         )
-          map[rowIdx + 1][columnIdx] += 1;
+          gameMap[rowIdx + 1][columnIdx] += 1;
         if (
-          map[rowIdx + 1] &&
-          map[rowIdx + 1][columnIdx + 1] !== undefined &&
-          map[rowIdx + 1][columnIdx + 1] !== "M"
+          gameMap[rowIdx + 1] &&
+          gameMap[rowIdx + 1][columnIdx + 1] !== undefined &&
+          gameMap[rowIdx + 1][columnIdx + 1] !== "M"
         )
-          map[rowIdx + 1][columnIdx + 1] += 1;
+          gameMap[rowIdx + 1][columnIdx + 1] += 1;
       }
     })
   );
+  return gameMap;
+};
+
+const Minesweeper = () => {
+  const [gameState, setGameState] = createStore({
+    gameMap: createGameMap(),
+    boardStateStack: [cloneDeep(untouchedBoard)],
+  });
 
   return (
     <div class="Minesweeper">
       <h1 class="title">Minesweeper: F</h1>
       <div class={`container`}>
-        {map.map((row) => {
+        {getCurrentBoardState(gameState).map((row) => {
+          return row.map((item) => {
+            return (
+              <div class={`wrapper`}>
+                <div class={`cell selectable`}>
+                  {/* <div class={`shadow`}></div> */}
+                </div>
+
+                {/* <span>{item > 0 || item === "M" ? item : ""}</span> */}
+              </div>
+            );
+          });
+        })}
+        {/* {gameState.gameMap.map((row) => {
           return row.map((item) => {
             return (
               <div class={`cell cell-1`}>
@@ -111,7 +133,7 @@ const Minesweeper = () => {
               </div>
             );
           });
-        })}
+        })} */}
       </div>
     </div>
   );
