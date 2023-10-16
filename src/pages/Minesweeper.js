@@ -1,3 +1,4 @@
+import { onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import cloneDeep from "clone-deep";
 import anime from "animejs";
@@ -21,6 +22,20 @@ const untouchedBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+const generateMineLocations = () => {
+  return [
+    [null, null, "M", null, null, null, null, null, null],
+    [null, null, null, null, null, null, "M", null, null],
+    [null, null, null, null, null, "M", null, null, null],
+    [null, null, null, null, null, "M", null, null, null],
+    [null, "M", null, null, null, null, null, null, null],
+    ["M", null, null, null, null, null, null, null, "M"],
+    [null, null, null, null, null, null, null, null, 1],
+    [null, null, null, null, 1, null, null, null, null],
+    [null, null, null, null, null, 1, null, null, null],
+  ];
+};
+
 const createGameMap = () => {
   const gameMap = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,17 +49,7 @@ const createGameMap = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
-  [
-    [null, null, "M", null, null, null, null, null, null],
-    [null, null, null, null, null, null, "M", null, null],
-    [null, null, null, null, null, "M", null, null, null],
-    [null, null, null, null, null, "M", null, null, null],
-    [null, "M", null, null, null, null, null, null, null],
-    ["M", null, null, null, null, null, null, null, "M"],
-    [null, null, null, null, null, null, null, null, 1],
-    [null, null, null, null, 1, null, null, null, null],
-    [null, null, null, null, null, 1, null, null, null],
-  ].forEach((row, rowIdx) =>
+  generateMineLocations().forEach((row, rowIdx) =>
     row.forEach((cellData, columnIdx) => {
       if (cellData === "M") {
         gameMap[rowIdx][columnIdx] = "M";
@@ -108,32 +113,72 @@ const Minesweeper = () => {
     boardStateStack: [cloneDeep(untouchedBoard)],
   });
 
+  const cellRefs = new Array(9).fill(0).map(() => []);
+
+  onMount(() => {
+    cellRefs.forEach((row) => {
+      row.forEach((cell) => {
+        const shadowInAnimation = anime({
+          targets: cell,
+          boxShadow: "inset 0 0 10px black",
+          duration: 25,
+          easing: 'easeInOutSine',
+          autoplay: false,
+        });
+
+        cell.addEventListener("mousedown", (e) => {
+          shadowInAnimation.play();
+        });
+        cell.addEventListener("mouseenter", (e) => {
+          anime({
+            targets: cell,
+            borderWidth: "2px",
+            duration: 25,
+            easing: 'easeInOutSine',
+          });
+        });
+        cell.addEventListener("mouseup", (e) => {
+          anime({
+            targets: cell,
+            boxShadow: "inset 0 0 0px black",
+            duration: 25,
+            easing: 'easeInOutSine',
+          });
+        });
+        cell.addEventListener("mouseleave", (e) => {
+          anime({
+            targets: cell,
+            boxShadow: "inset 0 0 0px black",
+            duration: 25,
+            easing: 'easeInOutSine',
+          });
+          anime({
+            targets: cell,
+            borderWidth: "0px",
+            duration: 25,
+            easing: 'easeInOutSine',
+          });
+        });
+      });
+    });
+  });
+
   return (
     <div class="Minesweeper">
       <h1 class="title">Minesweeper: F</h1>
       <div class={`container`}>
-        {getCurrentBoardState(gameState).map((row) => {
-          return row.map((item) => {
+        {getCurrentBoardState(gameState).map((row, rowIdx) => {
+          return row.map((item, colIdx) => {
             return (
               <div class={`wrapper`}>
-                <div class={`cell selectable`}>
-                  {/* <div class={`shadow`}></div> */}
-                </div>
-
-                {/* <span>{item > 0 || item === "M" ? item : ""}</span> */}
+                <div
+                  ref={cellRefs[rowIdx][colIdx]}
+                  class={`cell selectable`}
+                ></div>
               </div>
             );
           });
         })}
-        {/* {gameState.gameMap.map((row) => {
-          return row.map((item) => {
-            return (
-              <div class={`cell cell-1`}>
-                <span>{item > 0 || item === "M" ? item : ""}</span>
-              </div>
-            );
-          });
-        })} */}
       </div>
     </div>
   );
