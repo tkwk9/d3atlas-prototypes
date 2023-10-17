@@ -6,6 +6,17 @@ import Victor from "victor";
 
 import "./Minesweeper.scss";
 
+const cellColors = {
+  0: { color: "#a2a2a2", backgroundColor: "#565656" },
+  1: { color: "#0c1cc8", backgroundColor: "#757898" },
+  2: { color: "#013603", backgroundColor: "#556c5b" },
+  3: { color: "#750505", backgroundColor: "#605353" },
+  4: { color: "#030c77", backgroundColor: "#4b4d62" },
+  5: { color: "#440101", backgroundColor: "#383030" },
+  1: { color: "#030c77", backgroundColor: "#4b4d62" },
+  1: { color: "#030c77", backgroundColor: "#4b4d62" },
+};
+
 const untouchedBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -103,7 +114,7 @@ const createGameMap = () => {
   return gameMap;
 };
 
-const bababa = (rowIdx, colIdx) =>
+const getCellId = (rowIdx, colIdx) =>
   `c${rowIdx.toString().padStart(3, "0")}${colIdx.toString().padStart(3, "0")}`;
 
 const Minesweeper = () => {
@@ -140,133 +151,127 @@ const Minesweeper = () => {
           if (gameState.gameMap[rowIdx][colIdx] === 0) {
             window.aaa = gameState.gameMap;
             const set = new Set();
-            const stack = [bababa(rowIdx, colIdx)];
-            set.add(bababa(rowIdx, colIdx));
+            const stack = [getCellId(rowIdx, colIdx)];
+            set.add(getCellId(rowIdx, colIdx));
             while (stack.length) {
-              const xyz = stack.pop();
+              const cellId = stack.pop();
 
-              const rowIdx = parseInt(xyz.substr(1, 3));
-              const colIdx = parseInt(xyz.substr(4, 6));
-
-              console.log(rowIdx);
-              let el;
+              const rowIdx = parseInt(cellId.substr(1, 3));
+              const colIdx = parseInt(cellId.substr(4, 6));
 
               if (
                 gameState.gameMap[rowIdx - 1] &&
                 gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx - 1, colIdx - 1));
                 if (
                   gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
-                  !set.has(bababa(rowIdx - 1, colIdx - 1))
+                  !set.has(getCellId(rowIdx - 1, colIdx - 1))
                 ) {
-                  stack.push(bababa(rowIdx - 1, colIdx - 1));
+                  stack.push(getCellId(rowIdx - 1, colIdx - 1));
                 }
-                set.add(bababa(rowIdx - 1, colIdx - 1));
+                set.add(getCellId(rowIdx - 1, colIdx - 1));
               }
 
               if (
                 gameState.gameMap[rowIdx - 1] &&
                 gameState.gameMap[rowIdx - 1][colIdx] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx - 1, colIdx));
                 if (
                   gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
-                  !set.has(bababa(rowIdx - 1, colIdx))
+                  !set.has(getCellId(rowIdx - 1, colIdx))
                 ) {
-                  stack.push(bababa(rowIdx - 1, colIdx));
+                  stack.push(getCellId(rowIdx - 1, colIdx));
                 }
-                set.add(bababa(rowIdx - 1, colIdx));
+                set.add(getCellId(rowIdx - 1, colIdx));
               }
 
               if (
                 gameState.gameMap[rowIdx - 1] &&
                 gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx - 1, colIdx + 1));
                 if (
                   gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
-                  !set.has(bababa(rowIdx - 1, colIdx + 1))
+                  !set.has(getCellId(rowIdx - 1, colIdx + 1))
                 ) {
-                  stack.push(bababa(rowIdx - 1, colIdx + 1));
+                  stack.push(getCellId(rowIdx - 1, colIdx + 1));
                 }
-                set.add(bababa(rowIdx - 1, colIdx + 1));
+                set.add(getCellId(rowIdx - 1, colIdx + 1));
               }
 
               if (
                 gameState.gameMap[rowIdx] &&
                 gameState.gameMap[rowIdx][colIdx - 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx, colIdx - 1));
                 if (
                   gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
-                  !set.has(bababa(rowIdx, colIdx - 1))
+                  !set.has(getCellId(rowIdx, colIdx - 1))
                 ) {
-                  stack.push(bababa(rowIdx, colIdx - 1));
+                  stack.push(getCellId(rowIdx, colIdx - 1));
                 }
-                set.add(bababa(rowIdx, colIdx - 1));
+                set.add(getCellId(rowIdx, colIdx - 1));
               }
 
               if (
                 gameState.gameMap[rowIdx] &&
                 gameState.gameMap[rowIdx][colIdx + 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx, colIdx + 1));
                 if (
                   gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
-                  !set.has(bababa(rowIdx, colIdx + 1))
+                  !set.has(getCellId(rowIdx, colIdx + 1))
                 ) {
-                  stack.push(bababa(rowIdx, colIdx + 1));
+                  stack.push(getCellId(rowIdx, colIdx + 1));
                 }
-                set.add(bababa(rowIdx, colIdx + 1));
+                set.add(getCellId(rowIdx, colIdx + 1));
               }
 
               if (
                 gameState.gameMap[rowIdx + 1] &&
                 gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx + 1, colIdx - 1));
                 if (
                   gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
-                  !set.has(bababa(rowIdx + 1, colIdx - 1))
+                  !set.has(getCellId(rowIdx + 1, colIdx - 1))
                 ) {
-                  stack.push(bababa(rowIdx + 1, colIdx - 1));
+                  stack.push(getCellId(rowIdx + 1, colIdx - 1));
                 }
-                set.add(bababa(rowIdx + 1, colIdx - 1));
+                set.add(getCellId(rowIdx + 1, colIdx - 1));
               }
 
               if (
                 gameState.gameMap[rowIdx + 1] &&
                 gameState.gameMap[rowIdx + 1][colIdx] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx + 1, colIdx));
                 if (
                   gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
-                  !set.has(bababa(rowIdx + 1, colIdx))
+                  !set.has(getCellId(rowIdx + 1, colIdx))
                 ) {
-                  stack.push(bababa(rowIdx + 1, colIdx));
+                  stack.push(getCellId(rowIdx + 1, colIdx));
                 }
-                set.add(bababa(rowIdx + 1, colIdx));
+                set.add(getCellId(rowIdx + 1, colIdx));
               }
 
               if (
                 gameState.gameMap[rowIdx + 1] &&
                 gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
               ) {
-                el = document.getElementById(bababa(rowIdx + 1, colIdx + 1));
                 if (
                   gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
-                  !set.has(bababa(rowIdx + 1, colIdx + 1))
+                  !set.has(getCellId(rowIdx + 1, colIdx + 1))
                 ) {
-                  stack.push(bababa(rowIdx + 1, colIdx + 1));
+                  stack.push(getCellId(rowIdx + 1, colIdx + 1));
                 }
-                set.add(bababa(rowIdx + 1, colIdx + 1));
+                set.add(getCellId(rowIdx + 1, colIdx + 1));
               }
             }
 
             const newBoardState = cloneDeep(gameState.boardState);
             set.forEach((id) => {
-              console.log(id);
+              const { color, backgroundColor } =
+                cellColors[
+                  gameState.gameMap[parseInt(id.substr(1, 3))][
+                    parseInt(id.substr(4, 6))
+                  ]
+                ];
               anime({
                 targets: `#${id}`,
                 boxShadow: "inset 0 0 15px black",
@@ -277,7 +282,7 @@ const Minesweeper = () => {
                     .getElementById(id)
                     .setAttribute(
                       "style",
-                      `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px`
+                      `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
                     ),
               });
               newBoardState[parseInt(id.substr(1, 3))][
@@ -286,6 +291,9 @@ const Minesweeper = () => {
             });
             setGameState({ boardState: newBoardState });
           } else {
+            const { rowIdx, colIdx } = cell.dataset;
+            const { color, backgroundColor } =
+              cellColors[gameState.gameMap[rowIdx][colIdx]];
             anime({
               targets: cell,
               boxShadow: "inset 0 0 15px black",
@@ -294,7 +302,7 @@ const Minesweeper = () => {
               complete: () =>
                 cell.setAttribute(
                   "style",
-                  `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px`
+                  `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
                 ),
             });
             const newBoardState = cloneDeep(gameState.boardState);
@@ -332,13 +340,15 @@ const Minesweeper = () => {
               {(item, colIdx) => (
                 <div class={`wrapper`}>
                   <div
-                    id={bababa(rowIdx, colIdx)}
+                    id={getCellId(rowIdx, colIdx)}
                     ref={cellRefs[rowIdx][colIdx]}
                     data-row-idx={rowIdx}
                     data-col-idx={colIdx}
                     class={`cell`}
                   >
-                    {item() ? gameState.gameMap[rowIdx][colIdx] : ""}
+                    {item() && gameState.gameMap[rowIdx][colIdx] > 0
+                      ? gameState.gameMap[rowIdx][colIdx]
+                      : ""}
                   </div>
                 </div>
               )}
