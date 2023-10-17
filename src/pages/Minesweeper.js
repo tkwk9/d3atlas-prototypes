@@ -1,14 +1,10 @@
-import { onMount } from "solid-js";
+import { onMount, Index } from "solid-js";
 import { createStore } from "solid-js/store";
 import cloneDeep from "clone-deep";
 import anime from "animejs";
 import Victor from "victor";
 
 import "./Minesweeper.scss";
-
-const getCurrentBoardState = (state) => {
-  return state.boardStateStack[state.boardStateStack.length - 1];
-};
 
 const untouchedBoard = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -110,19 +106,19 @@ const createGameMap = () => {
 const Minesweeper = () => {
   const [gameState, setGameState] = createStore({
     gameMap: createGameMap(),
-    boardStateStack: [cloneDeep(untouchedBoard)],
+    boardState: cloneDeep(untouchedBoard),
   });
 
   const cellRefs = new Array(9).fill(0).map(() => []);
 
   onMount(() => {
-    cellRefs.forEach((row) => {
-      row.forEach((cell) => {
+    cellRefs.forEach((row, rowIdx) => {
+      row.forEach((cell, colIdx) => {
         const shadowInAnimation = anime({
           targets: cell,
           boxShadow: "inset 0 0 10px black",
           duration: 25,
-          easing: 'easeInOutSine',
+          easing: "easeInOutSine",
           autoplay: false,
         });
 
@@ -134,30 +130,40 @@ const Minesweeper = () => {
             targets: cell,
             borderWidth: "2px",
             duration: 25,
-            easing: 'easeInOutSine',
+            easing: "easeInOutSine",
           });
         });
         cell.addEventListener("mouseup", (e) => {
           anime({
             targets: cell,
-            boxShadow: "inset 0 0 0px black",
+            boxShadow: "inset 0 0 15px black",
             duration: 25,
-            easing: 'easeInOutSine',
+            easing: "easeInOutSine",
+            complete: () =>
+              cell.setAttribute(
+                "style",
+                "pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px"
+              ),
           });
+          const newBoardState = cloneDeep(gameState.boardState);
+          newBoardState[rowIdx][colIdx] = 1;
+          setGameState({ boardState: newBoardState });
         });
         cell.addEventListener("mouseleave", (e) => {
-          anime({
-            targets: cell,
-            boxShadow: "inset 0 0 0px black",
-            duration: 25,
-            easing: 'easeInOutSine',
-          });
-          anime({
-            targets: cell,
-            borderWidth: "0px",
-            duration: 25,
-            easing: 'easeInOutSine',
-          });
+          if (!gameState.boardState[rowIdx][colIdx]) {
+            anime({
+              targets: cell,
+              boxShadow: "inset 0 0 0px black",
+              duration: 25,
+              easing: "easeInOutSine",
+            });
+            anime({
+              targets: cell,
+              borderWidth: "0px",
+              duration: 25,
+              easing: "easeInOutSine",
+            });
+          }
         });
       });
     });
@@ -167,18 +173,19 @@ const Minesweeper = () => {
     <div class="Minesweeper">
       <h1 class="title">Minesweeper: F</h1>
       <div class={`container`}>
-        {getCurrentBoardState(gameState).map((row, rowIdx) => {
-          return row.map((item, colIdx) => {
-            return (
-              <div class={`wrapper`}>
-                <div
-                  ref={cellRefs[rowIdx][colIdx]}
-                  class={`cell selectable`}
-                ></div>
-              </div>
-            );
-          });
-        })}
+        <Index each={gameState.boardState}>
+          {(row, rowIdx) => (
+            <Index each={row()}>
+              {(item, colIdx) => (
+                <div class={`wrapper`}>
+                  <div ref={cellRefs[rowIdx][colIdx]} class={`cell`}>
+                    {item() ? gameState.gameMap[rowIdx][colIdx] : ""}
+                  </div>
+                </div>
+              )}
+            </Index>
+          )}
+        </Index>
       </div>
     </div>
   );
