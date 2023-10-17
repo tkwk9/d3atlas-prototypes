@@ -103,6 +103,9 @@ const createGameMap = () => {
   return gameMap;
 };
 
+const bababa = (rowIdx, colIdx) =>
+  `c${rowIdx.toString().padStart(3, "0")}${colIdx.toString().padStart(3, "0")}`;
+
 const Minesweeper = () => {
   const [gameState, setGameState] = createStore({
     gameMap: createGameMap(),
@@ -134,20 +137,170 @@ const Minesweeper = () => {
           });
         });
         cell.addEventListener("mouseup", (e) => {
-          anime({
-            targets: cell,
-            boxShadow: "inset 0 0 15px black",
-            duration: 25,
-            easing: "easeInOutSine",
-            complete: () =>
-              cell.setAttribute(
-                "style",
-                "pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px"
-              ),
-          });
-          const newBoardState = cloneDeep(gameState.boardState);
-          newBoardState[rowIdx][colIdx] = 1;
-          setGameState({ boardState: newBoardState });
+          if (gameState.gameMap[rowIdx][colIdx] === 0) {
+            window.aaa = gameState.gameMap;
+            const set = new Set();
+            const stack = [bababa(rowIdx, colIdx)];
+            set.add(bababa(rowIdx, colIdx));
+            while (stack.length) {
+              const xyz = stack.pop();
+
+              const rowIdx = parseInt(xyz.substr(1, 3));
+              const colIdx = parseInt(xyz.substr(4, 6));
+
+              console.log(rowIdx);
+              let el;
+
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx - 1, colIdx - 1));
+                if (
+                  gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
+                  !set.has(bababa(rowIdx - 1, colIdx - 1))
+                ) {
+                  stack.push(bababa(rowIdx - 1, colIdx - 1));
+                }
+                set.add(bababa(rowIdx - 1, colIdx - 1));
+              }
+
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx - 1, colIdx));
+                if (
+                  gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
+                  !set.has(bababa(rowIdx - 1, colIdx))
+                ) {
+                  stack.push(bababa(rowIdx - 1, colIdx));
+                }
+                set.add(bababa(rowIdx - 1, colIdx));
+              }
+
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx - 1, colIdx + 1));
+                if (
+                  gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
+                  !set.has(bababa(rowIdx - 1, colIdx + 1))
+                ) {
+                  stack.push(bababa(rowIdx - 1, colIdx + 1));
+                }
+                set.add(bababa(rowIdx - 1, colIdx + 1));
+              }
+
+              if (
+                gameState.gameMap[rowIdx] &&
+                gameState.gameMap[rowIdx][colIdx - 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx, colIdx - 1));
+                if (
+                  gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
+                  !set.has(bababa(rowIdx, colIdx - 1))
+                ) {
+                  stack.push(bababa(rowIdx, colIdx - 1));
+                }
+                set.add(bababa(rowIdx, colIdx - 1));
+              }
+
+              if (
+                gameState.gameMap[rowIdx] &&
+                gameState.gameMap[rowIdx][colIdx + 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx, colIdx + 1));
+                if (
+                  gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
+                  !set.has(bababa(rowIdx, colIdx + 1))
+                ) {
+                  stack.push(bababa(rowIdx, colIdx + 1));
+                }
+                set.add(bababa(rowIdx, colIdx + 1));
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx + 1, colIdx - 1));
+                if (
+                  gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
+                  !set.has(bababa(rowIdx + 1, colIdx - 1))
+                ) {
+                  stack.push(bababa(rowIdx + 1, colIdx - 1));
+                }
+                set.add(bababa(rowIdx + 1, colIdx - 1));
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx + 1, colIdx));
+                if (
+                  gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
+                  !set.has(bababa(rowIdx + 1, colIdx))
+                ) {
+                  stack.push(bababa(rowIdx + 1, colIdx));
+                }
+                set.add(bababa(rowIdx + 1, colIdx));
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
+              ) {
+                el = document.getElementById(bababa(rowIdx + 1, colIdx + 1));
+                if (
+                  gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
+                  !set.has(bababa(rowIdx + 1, colIdx + 1))
+                ) {
+                  stack.push(bababa(rowIdx + 1, colIdx + 1));
+                }
+                set.add(bababa(rowIdx + 1, colIdx + 1));
+              }
+            }
+
+            const newBoardState = cloneDeep(gameState.boardState);
+            set.forEach((id) => {
+              console.log(id);
+              anime({
+                targets: `#${id}`,
+                boxShadow: "inset 0 0 15px black",
+                duration: 25,
+                easing: "easeInOutSine",
+                complete: () =>
+                  document
+                    .getElementById(id)
+                    .setAttribute(
+                      "style",
+                      `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px`
+                    ),
+              });
+              newBoardState[parseInt(id.substr(1, 3))][
+                parseInt(id.substr(4, 6))
+              ] = 1;
+            });
+            setGameState({ boardState: newBoardState });
+          } else {
+            anime({
+              targets: cell,
+              boxShadow: "inset 0 0 15px black",
+              duration: 25,
+              easing: "easeInOutSine",
+              complete: () =>
+                cell.setAttribute(
+                  "style",
+                  `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px`
+                ),
+            });
+            const newBoardState = cloneDeep(gameState.boardState);
+            newBoardState[rowIdx][colIdx] = 1;
+            setGameState({ boardState: newBoardState });
+          }
         });
         cell.addEventListener("mouseleave", (e) => {
           if (!gameState.boardState[rowIdx][colIdx]) {
@@ -178,7 +331,13 @@ const Minesweeper = () => {
             <Index each={row()}>
               {(item, colIdx) => (
                 <div class={`wrapper`}>
-                  <div ref={cellRefs[rowIdx][colIdx]} class={`cell`}>
+                  <div
+                    id={bababa(rowIdx, colIdx)}
+                    ref={cellRefs[rowIdx][colIdx]}
+                    data-row-idx={rowIdx}
+                    data-col-idx={colIdx}
+                    class={`cell`}
+                  >
                     {item() ? gameState.gameMap[rowIdx][colIdx] : ""}
                   </div>
                 </div>
