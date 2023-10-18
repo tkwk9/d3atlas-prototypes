@@ -30,17 +30,17 @@ const untouchedBoard = [
 ];
 
 const generateMineLocations = () => {
-  return [
-    [null, null, "M", null, null, null, null, null, null],
-    [null, null, null, null, null, null, "M", null, null],
-    [null, null, null, null, null, "M", null, null, null],
-    [null, null, null, null, null, "M", null, null, null],
-    [null, "M", null, null, null, null, null, null, null],
-    ["M", null, null, null, null, null, null, null, "M"],
-    [null, null, null, null, null, null, null, null, 1],
-    [null, null, null, null, 1, null, null, null, null],
-    [null, null, null, null, null, 1, null, null, null],
-  ];
+  const mineLoc = new Array(9).fill(undefined).map(() => new Array(9).fill(null));
+  let counter = 0;
+  while (counter < 15) {
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    if (mineLoc[row][col]) continue;
+    mineLoc[row][col] = "M";
+    counter++;
+  }
+  // Math.floor(Math.random() * 9);
+  return mineLoc;
 };
 
 const createGameMap = () => {
