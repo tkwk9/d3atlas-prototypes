@@ -152,6 +152,11 @@ const Minesweeper = () => {
         cell.addEventListener("mousedown", (e) => {
           console.log(e.metaKey);
           if (e.which === 1 && !e.metaKey) {
+            if (
+              gameState.boardState[rowIdx][colIdx] === 2 ||
+              gameState.boardState[rowIdx][colIdx] === 1
+            )
+              return;
             shadowInAnimation.play();
           }
         });
@@ -177,6 +182,7 @@ const Minesweeper = () => {
             setGameState({ boardState: newState });
           }
           if (e.which === 1 && !e.metaKey) {
+            if (gameState.boardState[rowIdx][colIdx] === 2) return;
             if (gameState.gameMap[rowIdx][colIdx] === 0) {
               window.aaa = gameState.gameMap;
               const set = new Set();
@@ -190,7 +196,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx - 1] &&
-                  gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
+                  gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined &&
+                  gameState.boardState[rowIdx - 1][colIdx - 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
@@ -203,7 +210,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx - 1] &&
-                  gameState.gameMap[rowIdx - 1][colIdx] !== undefined
+                  gameState.gameMap[rowIdx - 1][colIdx] !== undefined &&
+                  gameState.boardState[rowIdx - 1][colIdx] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
@@ -216,7 +224,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx - 1] &&
-                  gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
+                  gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined &&
+                  gameState.boardState[rowIdx - 1][colIdx + 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
@@ -229,7 +238,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx] &&
-                  gameState.gameMap[rowIdx][colIdx - 1] !== undefined
+                  gameState.gameMap[rowIdx][colIdx - 1] !== undefined &&
+                  gameState.boardState[rowIdx][colIdx - 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
@@ -242,7 +252,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx] &&
-                  gameState.gameMap[rowIdx][colIdx + 1] !== undefined
+                  gameState.gameMap[rowIdx][colIdx + 1] !== undefined &&
+                  gameState.boardState[rowIdx][colIdx + 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
@@ -255,7 +266,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx + 1] &&
-                  gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
+                  gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined &&
+                  gameState.boardState[rowIdx + 1][colIdx - 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
@@ -268,7 +280,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx + 1] &&
-                  gameState.gameMap[rowIdx + 1][colIdx] !== undefined
+                  gameState.gameMap[rowIdx + 1][colIdx] !== undefined &&
+                  gameState.boardState[rowIdx + 1][colIdx] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
@@ -281,7 +294,8 @@ const Minesweeper = () => {
 
                 if (
                   gameState.gameMap[rowIdx + 1] &&
-                  gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
+                  gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined &&
+                  gameState.boardState[rowIdx + 1][colIdx + 1] !== 2
                 ) {
                   if (
                     gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
