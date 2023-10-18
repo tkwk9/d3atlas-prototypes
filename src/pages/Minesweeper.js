@@ -118,7 +118,6 @@ const getCellId = (rowIdx, colIdx) =>
   `c${rowIdx.toString().padStart(3, "0")}${colIdx.toString().padStart(3, "0")}`;
 
 const Minesweeper = () => {
-  
   const [gameState, setGameState] = createStore({
     gameMap: createGameMap(),
     boardState: cloneDeep(untouchedBoard),
@@ -127,8 +126,16 @@ const Minesweeper = () => {
   const cellRefs = new Array(9).fill(0).map(() => []);
 
   onMount(() => {
-    document.getElementsByClassName("Content")[0].addEventListener("mousedown", e => {e.preventDefault()})
-    document.getElementsByClassName("Content")[0].addEventListener("contextmenu", e => {e.preventDefault()})
+    document
+      .getElementsByClassName("Content")[0]
+      .addEventListener("mousedown", (e) => {
+        e.preventDefault();
+      });
+    document
+      .getElementsByClassName("Content")[0]
+      .addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+      });
 
     cellRefs.forEach((row, rowIdx) => {
       row.forEach((cell, colIdx) => {
@@ -140,9 +147,15 @@ const Minesweeper = () => {
           autoplay: false,
         });
 
+        cell.addEventListener("contextmenu", (e) => {});
+
         cell.addEventListener("mousedown", (e) => {
-          shadowInAnimation.play();
+          console.log(e.metaKey);
+          if (e.which === 1 && !e.metaKey) {
+            shadowInAnimation.play();
+          }
         });
+
         cell.addEventListener("mouseenter", (e) => {
           anime({
             targets: cell,
@@ -151,169 +164,183 @@ const Minesweeper = () => {
             easing: "easeInOutSine",
           });
         });
+
         cell.addEventListener("mouseup", (e) => {
-          if (gameState.gameMap[rowIdx][colIdx] === 0) {
-            window.aaa = gameState.gameMap;
-            const set = new Set();
-            const stack = [getCellId(rowIdx, colIdx)];
-            set.add(getCellId(rowIdx, colIdx));
-            while (stack.length) {
-              const cellId = stack.pop();
-
-              const rowIdx = parseInt(cellId.substr(1, 3));
-              const colIdx = parseInt(cellId.substr(4, 6));
-
-              if (
-                gameState.gameMap[rowIdx - 1] &&
-                gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
-                  !set.has(getCellId(rowIdx - 1, colIdx - 1))
-                ) {
-                  stack.push(getCellId(rowIdx - 1, colIdx - 1));
-                }
-                set.add(getCellId(rowIdx - 1, colIdx - 1));
-              }
-
-              if (
-                gameState.gameMap[rowIdx - 1] &&
-                gameState.gameMap[rowIdx - 1][colIdx] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
-                  !set.has(getCellId(rowIdx - 1, colIdx))
-                ) {
-                  stack.push(getCellId(rowIdx - 1, colIdx));
-                }
-                set.add(getCellId(rowIdx - 1, colIdx));
-              }
-
-              if (
-                gameState.gameMap[rowIdx - 1] &&
-                gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
-                  !set.has(getCellId(rowIdx - 1, colIdx + 1))
-                ) {
-                  stack.push(getCellId(rowIdx - 1, colIdx + 1));
-                }
-                set.add(getCellId(rowIdx - 1, colIdx + 1));
-              }
-
-              if (
-                gameState.gameMap[rowIdx] &&
-                gameState.gameMap[rowIdx][colIdx - 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
-                  !set.has(getCellId(rowIdx, colIdx - 1))
-                ) {
-                  stack.push(getCellId(rowIdx, colIdx - 1));
-                }
-                set.add(getCellId(rowIdx, colIdx - 1));
-              }
-
-              if (
-                gameState.gameMap[rowIdx] &&
-                gameState.gameMap[rowIdx][colIdx + 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
-                  !set.has(getCellId(rowIdx, colIdx + 1))
-                ) {
-                  stack.push(getCellId(rowIdx, colIdx + 1));
-                }
-                set.add(getCellId(rowIdx, colIdx + 1));
-              }
-
-              if (
-                gameState.gameMap[rowIdx + 1] &&
-                gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
-                  !set.has(getCellId(rowIdx + 1, colIdx - 1))
-                ) {
-                  stack.push(getCellId(rowIdx + 1, colIdx - 1));
-                }
-                set.add(getCellId(rowIdx + 1, colIdx - 1));
-              }
-
-              if (
-                gameState.gameMap[rowIdx + 1] &&
-                gameState.gameMap[rowIdx + 1][colIdx] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
-                  !set.has(getCellId(rowIdx + 1, colIdx))
-                ) {
-                  stack.push(getCellId(rowIdx + 1, colIdx));
-                }
-                set.add(getCellId(rowIdx + 1, colIdx));
-              }
-
-              if (
-                gameState.gameMap[rowIdx + 1] &&
-                gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
-              ) {
-                if (
-                  gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
-                  !set.has(getCellId(rowIdx + 1, colIdx + 1))
-                ) {
-                  stack.push(getCellId(rowIdx + 1, colIdx + 1));
-                }
-                set.add(getCellId(rowIdx + 1, colIdx + 1));
-              }
+          console.log(e.which);
+          if (e.which === 3 || (e.which === 1 && e.metaKey)) {
+            const newState = cloneDeep(gameState.boardState);
+            if (gameState.boardState[rowIdx][colIdx] == 0) {
+              newState[rowIdx][colIdx] = 2;
+            } else if (gameState.boardState[rowIdx][colIdx] == 2) {
+              newState[rowIdx][colIdx] = 0;
             }
+            setGameState({ boardState: newState });
+          }
+          if (e.which === 1 && !e.metaKey) {
+            if (gameState.gameMap[rowIdx][colIdx] === 0) {
+              window.aaa = gameState.gameMap;
+              const set = new Set();
+              const stack = [getCellId(rowIdx, colIdx)];
+              set.add(getCellId(rowIdx, colIdx));
+              while (stack.length) {
+                const cellId = stack.pop();
 
-            const newBoardState = cloneDeep(gameState.boardState);
-            set.forEach((id) => {
+                const rowIdx = parseInt(cellId.substr(1, 3));
+                const colIdx = parseInt(cellId.substr(4, 6));
+
+                if (
+                  gameState.gameMap[rowIdx - 1] &&
+                  gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
+                    !set.has(getCellId(rowIdx - 1, colIdx - 1))
+                  ) {
+                    stack.push(getCellId(rowIdx - 1, colIdx - 1));
+                  }
+                  set.add(getCellId(rowIdx - 1, colIdx - 1));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx - 1] &&
+                  gameState.gameMap[rowIdx - 1][colIdx] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
+                    !set.has(getCellId(rowIdx - 1, colIdx))
+                  ) {
+                    stack.push(getCellId(rowIdx - 1, colIdx));
+                  }
+                  set.add(getCellId(rowIdx - 1, colIdx));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx - 1] &&
+                  gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
+                    !set.has(getCellId(rowIdx - 1, colIdx + 1))
+                  ) {
+                    stack.push(getCellId(rowIdx - 1, colIdx + 1));
+                  }
+                  set.add(getCellId(rowIdx - 1, colIdx + 1));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx] &&
+                  gameState.gameMap[rowIdx][colIdx - 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
+                    !set.has(getCellId(rowIdx, colIdx - 1))
+                  ) {
+                    stack.push(getCellId(rowIdx, colIdx - 1));
+                  }
+                  set.add(getCellId(rowIdx, colIdx - 1));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx] &&
+                  gameState.gameMap[rowIdx][colIdx + 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
+                    !set.has(getCellId(rowIdx, colIdx + 1))
+                  ) {
+                    stack.push(getCellId(rowIdx, colIdx + 1));
+                  }
+                  set.add(getCellId(rowIdx, colIdx + 1));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx + 1] &&
+                  gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
+                    !set.has(getCellId(rowIdx + 1, colIdx - 1))
+                  ) {
+                    stack.push(getCellId(rowIdx + 1, colIdx - 1));
+                  }
+                  set.add(getCellId(rowIdx + 1, colIdx - 1));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx + 1] &&
+                  gameState.gameMap[rowIdx + 1][colIdx] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
+                    !set.has(getCellId(rowIdx + 1, colIdx))
+                  ) {
+                    stack.push(getCellId(rowIdx + 1, colIdx));
+                  }
+                  set.add(getCellId(rowIdx + 1, colIdx));
+                }
+
+                if (
+                  gameState.gameMap[rowIdx + 1] &&
+                  gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
+                ) {
+                  if (
+                    gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
+                    !set.has(getCellId(rowIdx + 1, colIdx + 1))
+                  ) {
+                    stack.push(getCellId(rowIdx + 1, colIdx + 1));
+                  }
+                  set.add(getCellId(rowIdx + 1, colIdx + 1));
+                }
+              }
+
+              const newBoardState = cloneDeep(gameState.boardState);
+              set.forEach((id) => {
+                const { color, backgroundColor } =
+                  cellColors[
+                    gameState.gameMap[parseInt(id.substr(1, 3))][
+                      parseInt(id.substr(4, 6))
+                    ]
+                  ];
+                anime({
+                  targets: `#${id}`,
+                  boxShadow: "inset 0 0 15px black",
+                  duration: 25,
+                  easing: "easeInOutSine",
+                  complete: () =>
+                    document
+                      .getElementById(id)
+                      .setAttribute(
+                        "style",
+                        `box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
+                      ),
+                });
+                newBoardState[parseInt(id.substr(1, 3))][
+                  parseInt(id.substr(4, 6))
+                ] = 1;
+              });
+              setGameState({ boardState: newBoardState });
+            } else {
+              const { rowIdx, colIdx } = cell.dataset;
               const { color, backgroundColor } =
-                cellColors[
-                  gameState.gameMap[parseInt(id.substr(1, 3))][
-                    parseInt(id.substr(4, 6))
-                  ]
-                ];
+                cellColors[gameState.gameMap[rowIdx][colIdx]];
               anime({
-                targets: `#${id}`,
+                targets: cell,
                 boxShadow: "inset 0 0 15px black",
                 duration: 25,
                 easing: "easeInOutSine",
                 complete: () =>
-                  document
-                    .getElementById(id)
-                    .setAttribute(
-                      "style",
-                      `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
-                    ),
+                  cell.setAttribute(
+                    "style",
+                    `box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
+                  ),
               });
-              newBoardState[parseInt(id.substr(1, 3))][
-                parseInt(id.substr(4, 6))
-              ] = 1;
-            });
-            setGameState({ boardState: newBoardState });
-          } else {
-            const { rowIdx, colIdx } = cell.dataset;
-            const { color, backgroundColor } =
-              cellColors[gameState.gameMap[rowIdx][colIdx]];
-            anime({
-              targets: cell,
-              boxShadow: "inset 0 0 15px black",
-              duration: 25,
-              easing: "easeInOutSine",
-              complete: () =>
-                cell.setAttribute(
-                  "style",
-                  `pointer-events: none; box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
-                ),
-            });
-            const newBoardState = cloneDeep(gameState.boardState);
-            newBoardState[rowIdx][colIdx] = 1;
-            setGameState({ boardState: newBoardState });
+              const newBoardState = cloneDeep(gameState.boardState);
+              newBoardState[rowIdx][colIdx] = 1;
+              setGameState({ boardState: newBoardState });
+            }
           }
         });
+
         cell.addEventListener("mouseleave", (e) => {
           if (!gameState.boardState[rowIdx][colIdx]) {
             anime({
@@ -348,11 +375,12 @@ const Minesweeper = () => {
                     ref={cellRefs[rowIdx][colIdx]}
                     data-row-idx={rowIdx}
                     data-col-idx={colIdx}
-                    class={`cell`}
+                    class={`cell ${item() ? "" : "covered"}`}
                   >
-                    {item() && gameState.gameMap[rowIdx][colIdx] > 0
+                    {item() === 1 && gameState.gameMap[rowIdx][colIdx] > 0
                       ? gameState.gameMap[rowIdx][colIdx]
                       : ""}
+                    {item() === 2 ? "F" : ""}
                   </div>
                 </div>
               )}
