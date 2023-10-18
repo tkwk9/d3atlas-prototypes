@@ -118,6 +118,7 @@ const getCellId = (rowIdx, colIdx) =>
   `c${rowIdx.toString().padStart(3, "0")}${colIdx.toString().padStart(3, "0")}`;
 
 const Minesweeper = () => {
+  
   const [gameState, setGameState] = createStore({
     gameMap: createGameMap(),
     boardState: cloneDeep(untouchedBoard),
@@ -126,6 +127,9 @@ const Minesweeper = () => {
   const cellRefs = new Array(9).fill(0).map(() => []);
 
   onMount(() => {
+    document.getElementsByClassName("Content")[0].addEventListener("mousedown", e => {e.preventDefault()})
+    document.getElementsByClassName("Content")[0].addEventListener("contextmenu", e => {e.preventDefault()})
+
     cellRefs.forEach((row, rowIdx) => {
       row.forEach((cell, colIdx) => {
         const shadowInAnimation = anime({
