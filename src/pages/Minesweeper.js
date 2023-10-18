@@ -9,12 +9,12 @@ import "./Minesweeper.scss";
 const cellColors = {
   0: { color: "#a2a2a2", backgroundColor: "#565656" },
   1: { color: "#0c1cc8", backgroundColor: "#757898" },
-  2: { color: "#013603", backgroundColor: "#556c5b" },
-  3: { color: "#750505", backgroundColor: "#605353" },
-  4: { color: "#030c77", backgroundColor: "#4b4d62" },
-  5: { color: "#440101", backgroundColor: "#383030" },
-  1: { color: "#030c77", backgroundColor: "#4b4d62" },
-  1: { color: "#030c77", backgroundColor: "#4b4d62" },
+  2: { color: "#013603", backgroundColor: "#728276" },
+  3: { color: "#750505", backgroundColor: "#7c6e6e" },
+  4: { color: "#7b7d98", backgroundColor: "#2f3251" },
+  5: { color: "#926f6f", backgroundColor: "#341f1f" },
+  6: { color: "#2f0000", backgroundColor: "#4b4d62" },
+  7: { color: "#030c77", backgroundColor: "#4b4d62" },
 };
 
 const untouchedBoard = [
@@ -32,7 +32,7 @@ const untouchedBoard = [
 const generateMineLocations = () => {
   const mineLoc = new Array(9).fill(undefined).map(() => new Array(9).fill(null));
   let counter = 0;
-  while (counter < 15) {
+  while (counter < 12) {
     const row = Math.floor(Math.random() * 9);
     const col = Math.floor(Math.random() * 9);
     if (mineLoc[row][col]) continue;
