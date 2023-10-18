@@ -178,13 +178,310 @@ const Minesweeper = () => {
               newState[rowIdx][colIdx] = 2;
             } else if (gameState.boardState[rowIdx][colIdx] == 2) {
               newState[rowIdx][colIdx] = 0;
+            } else if (gameState.boardState[rowIdx][colIdx] == 1) {
+              let flagCount = 0;
+              let emptyCells = [];
+              let clearCells = [];
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx - 1][colIdx - 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx - 1][colIdx - 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx - 1, colIdx - 1));
+                }
+                if (gameState.gameMap[rowIdx - 1][colIdx - 1] === 0) {
+                  clearCells.push(getCellId(rowIdx - 1, colIdx - 1));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx - 1][colIdx] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx - 1][colIdx] === 0) {
+                  emptyCells.push(getCellId(rowIdx - 1, colIdx));
+                }
+                if (gameState.gameMap[rowIdx - 1][colIdx] === 0) {
+                  clearCells.push(getCellId(rowIdx - 1, colIdx));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx - 1] &&
+                gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx - 1][colIdx + 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx - 1][colIdx + 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx - 1, colIdx + 1));
+                }
+                if (gameState.gameMap[rowIdx - 1][colIdx + 1] === 0) {
+                  clearCells.push(getCellId(rowIdx - 1, colIdx + 1));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx] &&
+                gameState.gameMap[rowIdx][colIdx - 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx][colIdx - 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx][colIdx - 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx, colIdx - 1));
+                }
+                if (gameState.gameMap[rowIdx][colIdx - 1] === 0) {
+                  clearCells.push(getCellId(rowIdx, colIdx - 1));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx] &&
+                gameState.gameMap[rowIdx][colIdx + 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx][colIdx + 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx][colIdx + 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx, colIdx + 1));
+                }
+                if (gameState.gameMap[rowIdx][colIdx + 1] === 0) {
+                  clearCells.push(getCellId(rowIdx, colIdx + 1));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx + 1][colIdx - 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx + 1][colIdx - 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx + 1, colIdx - 1));
+                }
+                if (gameState.gameMap[rowIdx + 1][colIdx - 1] === 0) {
+                  clearCells.push(getCellId(rowIdx + 1, colIdx - 1));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx + 1][colIdx] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx + 1][colIdx] === 0) {
+                  emptyCells.push(getCellId(rowIdx + 1, colIdx));
+                }
+                if (gameState.gameMap[rowIdx + 1][colIdx] === 0) {
+                  clearCells.push(getCellId(rowIdx + 1, colIdx));
+                }
+              }
+
+              if (
+                gameState.gameMap[rowIdx + 1] &&
+                gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined
+              ) {
+                if (gameState.boardState[rowIdx + 1][colIdx + 1] === 2) {
+                  flagCount++;
+                }
+                if (gameState.boardState[rowIdx + 1][colIdx + 1] === 0) {
+                  emptyCells.push(getCellId(rowIdx + 1, colIdx + 1));
+                }
+                if (gameState.gameMap[rowIdx + 1][colIdx + 1] === 0) {
+                  clearCells.push(getCellId(rowIdx + 1, colIdx + 1));
+                }
+              }
+
+              if (flagCount >= gameState.gameMap[rowIdx][colIdx]) {
+                emptyCells.forEach((id) => {
+                  const { color, backgroundColor } =
+                    cellColors[
+                      gameState.gameMap[parseInt(id.substr(1, 3))][
+                        parseInt(id.substr(4, 6))
+                      ]
+                    ];
+                  anime({
+                    targets: `#${id}`,
+                    boxShadow: "inset 0 0 15px black",
+                    duration: 25,
+                    easing: "easeInOutSine",
+                    complete: () =>
+                      document
+                        .getElementById(id)
+                        .setAttribute(
+                          "style",
+                          `box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
+                        ),
+                  });
+                  newState[parseInt(id.substr(1, 3))][
+                    parseInt(id.substr(4, 6))
+                  ] = 1;
+                });
+                clearCells.forEach((id) => {
+                  const set = new Set();
+                  const stack = [id];
+                  set.add(id);
+                  while (stack.length) {
+                    const cellId = stack.pop();
+
+                    const rowIdx = parseInt(cellId.substr(1, 3));
+                    const colIdx = parseInt(cellId.substr(4, 6));
+
+                    if (
+                      gameState.gameMap[rowIdx - 1] &&
+                      gameState.gameMap[rowIdx - 1][colIdx - 1] !== undefined &&
+                      gameState.boardState[rowIdx - 1][colIdx - 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx - 1][colIdx - 1] === 0 &&
+                        !set.has(getCellId(rowIdx - 1, colIdx - 1))
+                      ) {
+                        stack.push(getCellId(rowIdx - 1, colIdx - 1));
+                      }
+                      set.add(getCellId(rowIdx - 1, colIdx - 1));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx - 1] &&
+                      gameState.gameMap[rowIdx - 1][colIdx] !== undefined &&
+                      gameState.boardState[rowIdx - 1][colIdx] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx - 1][colIdx] === 0 &&
+                        !set.has(getCellId(rowIdx - 1, colIdx))
+                      ) {
+                        stack.push(getCellId(rowIdx - 1, colIdx));
+                      }
+                      set.add(getCellId(rowIdx - 1, colIdx));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx - 1] &&
+                      gameState.gameMap[rowIdx - 1][colIdx + 1] !== undefined &&
+                      gameState.boardState[rowIdx - 1][colIdx + 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx - 1][colIdx + 1] === 0 &&
+                        !set.has(getCellId(rowIdx - 1, colIdx + 1))
+                      ) {
+                        stack.push(getCellId(rowIdx - 1, colIdx + 1));
+                      }
+                      set.add(getCellId(rowIdx - 1, colIdx + 1));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx] &&
+                      gameState.gameMap[rowIdx][colIdx - 1] !== undefined &&
+                      gameState.boardState[rowIdx][colIdx - 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx][colIdx - 1] === 0 &&
+                        !set.has(getCellId(rowIdx, colIdx - 1))
+                      ) {
+                        stack.push(getCellId(rowIdx, colIdx - 1));
+                      }
+                      set.add(getCellId(rowIdx, colIdx - 1));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx] &&
+                      gameState.gameMap[rowIdx][colIdx + 1] !== undefined &&
+                      gameState.boardState[rowIdx][colIdx + 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx][colIdx + 1] === 0 &&
+                        !set.has(getCellId(rowIdx, colIdx + 1))
+                      ) {
+                        stack.push(getCellId(rowIdx, colIdx + 1));
+                      }
+                      set.add(getCellId(rowIdx, colIdx + 1));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx + 1] &&
+                      gameState.gameMap[rowIdx + 1][colIdx - 1] !== undefined &&
+                      gameState.boardState[rowIdx + 1][colIdx - 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx + 1][colIdx - 1] === 0 &&
+                        !set.has(getCellId(rowIdx + 1, colIdx - 1))
+                      ) {
+                        stack.push(getCellId(rowIdx + 1, colIdx - 1));
+                      }
+                      set.add(getCellId(rowIdx + 1, colIdx - 1));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx + 1] &&
+                      gameState.gameMap[rowIdx + 1][colIdx] !== undefined &&
+                      gameState.boardState[rowIdx + 1][colIdx] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx + 1][colIdx] === 0 &&
+                        !set.has(getCellId(rowIdx + 1, colIdx))
+                      ) {
+                        stack.push(getCellId(rowIdx + 1, colIdx));
+                      }
+                      set.add(getCellId(rowIdx + 1, colIdx));
+                    }
+
+                    if (
+                      gameState.gameMap[rowIdx + 1] &&
+                      gameState.gameMap[rowIdx + 1][colIdx + 1] !== undefined &&
+                      gameState.boardState[rowIdx + 1][colIdx + 1] !== 2
+                    ) {
+                      if (
+                        gameState.gameMap[rowIdx + 1][colIdx + 1] === 0 &&
+                        !set.has(getCellId(rowIdx + 1, colIdx + 1))
+                      ) {
+                        stack.push(getCellId(rowIdx + 1, colIdx + 1));
+                      }
+                      set.add(getCellId(rowIdx + 1, colIdx + 1));
+                    }
+                  }
+
+                  set.forEach((id) => {
+                    const { color, backgroundColor } =
+                      cellColors[
+                        gameState.gameMap[parseInt(id.substr(1, 3))][
+                          parseInt(id.substr(4, 6))
+                        ]
+                      ];
+                    anime({
+                      targets: `#${id}`,
+                      boxShadow: "inset 0 0 15px black",
+                      duration: 25,
+                      easing: "easeInOutSine",
+                      complete: () =>
+                        document
+                          .getElementById(id)
+                          .setAttribute(
+                            "style",
+                            `box-shadow: inset 0 0 15px black; border-width: 2px; color: ${color}; background-color: ${backgroundColor}`
+                          ),
+                    });
+                    newState[parseInt(id.substr(1, 3))][
+                      parseInt(id.substr(4, 6))
+                    ] = 1;
+                  });
+                });
+              }
             }
             setGameState({ boardState: newState });
           }
           if (e.which === 1 && !e.metaKey) {
             if (gameState.boardState[rowIdx][colIdx] === 2) return;
             if (gameState.gameMap[rowIdx][colIdx] === 0) {
-              window.aaa = gameState.gameMap;
               const set = new Set();
               const stack = [getCellId(rowIdx, colIdx)];
               set.add(getCellId(rowIdx, colIdx));
