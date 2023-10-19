@@ -17,22 +17,12 @@ const cellColors = {
   7: { color: "#030c77", backgroundColor: "#4b4d62" },
 };
 
-const untouchedBoard = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
+const untouchedBoard = new Array(9).fill(undefined).map(() => new Array(9).fill(0));
 
 const generateMineLocations = () => {
   const mineLoc = new Array(9).fill(undefined).map(() => new Array(9).fill(null));
   let counter = 0;
-  while (counter < 12) {
+  while (counter < 9) {
     const row = Math.floor(Math.random() * 9);
     const col = Math.floor(Math.random() * 9);
     if (mineLoc[row][col]) continue;
@@ -44,18 +34,7 @@ const generateMineLocations = () => {
 };
 
 const createGameMap = () => {
-  const gameMap = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-
+  const gameMap = new Array(9).fill(undefined).map(() => new Array(9).fill(0));
   generateMineLocations().forEach((row, rowIdx) =>
     row.forEach((cellData, columnIdx) => {
       if (cellData === "M") {
