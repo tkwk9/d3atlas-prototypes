@@ -45,11 +45,11 @@ const SvgStressTest = () => {
           .map((row, rowIdx) =>
             row.map((_, colIdx) => (
               <rect
-                x={`${rowIdx * 11}`}
-                y={`${colIdx * 11}`}
-                width="10"
-                height="10"
-                rx="3"
+                x={`${rowIdx * 7}`}
+                y={`${colIdx * 7}`}
+                width="50"
+                height="50"
+                rx="1"
                 stroke-width="1"
                 stroke="black"
                 fill="red"

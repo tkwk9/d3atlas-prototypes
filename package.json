@@ -39,7 +39,11 @@
     "@solidjs/router": "^0.8.3",
     "animejs": "^3.2.1",
     "clone-deep": "^4.0.1",
+    "createjs": "^1.0.1",
     "d3": "^7.8.5",
+    "install": "^0.13.0",
+    "konva": "^9.2.2",
+    "npm": "^10.2.1",
     "solid-js": "^1.7.12",
     "topojson": "^3.0.2",
     "victor": "^1.1.0"

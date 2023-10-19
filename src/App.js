@@ -8,6 +8,7 @@ import DragBox from "./pages/DragBox.js";
 import Console from "./pages/Console.js";
 import Minesweeper from "./pages/Minesweeper.js";
 import SvgStressTest from "./pages/SvgStressTest.js";
+import CanvasStressTest from "./pages/CanvasStressTest.js";
 import "./App.scss";
 
 const NavBar = () => (
@@ -20,6 +21,7 @@ const NavBar = () => (
     <A href="/console">Console</A>
     <A href="/minesweeper">Minesweeper</A>
     <A href="/svgstresstest">SvgStressTest</A>
+    <A href="/canvasstresstest">CanvasStressTest</A>
   </div>
 );
 
@@ -44,6 +46,7 @@ const Content = () => {
         <Route path="/console" end component={Console} />
         <Route path="/minesweeper" end component={Minesweeper} />
         <Route path="/svgstresstest" end component={SvgStressTest} />
+        <Route path="/canvasstresstest" end component={CanvasStressTest} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
