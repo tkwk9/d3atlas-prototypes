@@ -29,7 +29,6 @@ const generateMineLocations = () => {
     mineLoc[row][col] = "M";
     counter++;
   }
-  // Math.floor(Math.random() * 9);
   return mineLoc;
 };
 
