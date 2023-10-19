@@ -7,6 +7,7 @@ import BarChartAnimation from "./pages/BarChartAnimation.js";
 import DragBox from "./pages/DragBox.js";
 import Console from "./pages/Console.js";
 import Minesweeper from "./pages/Minesweeper.js";
+import SvgStressTest from "./pages/SvgStressTest.js";
 import "./App.scss";
 
 const NavBar = () => (
@@ -18,7 +19,7 @@ const NavBar = () => (
     <A href="/comparator">DragBox</A>
     <A href="/console">Console</A>
     <A href="/minesweeper">Minesweeper</A>
-    {/* <A href="/us_3">US-3</A> */}
+    <A href="/svgstresstest">SvgStressTest</A>
   </div>
 );
 
@@ -42,6 +43,7 @@ const Content = () => {
         <Route path="/comparator" end component={DragBox} />
         <Route path="/console" end component={Console} />
         <Route path="/minesweeper" end component={Minesweeper} />
+        <Route path="/svgstresstest" end component={SvgStressTest} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
