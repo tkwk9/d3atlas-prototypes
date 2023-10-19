@@ -26,7 +26,6 @@ const SvgStressTest = () => {
             clientX: e.clientX,
             clientY: e.clientY,
           }) && console.log(svgRef.viewBox)
-          
         }
         onmouseup={(e) => setDragPoint(null)}
         onmousemove={(e) =>
@@ -40,15 +39,23 @@ const SvgStressTest = () => {
         }
         onmouseleave={(e) => setDragPoint(null)}
       >
-        <rect
-          x="0"
-          width="100"
-          height="100"
-          rx="15"
-          stroke-width="1"
-          stroke="black"
-          fill="red"
-        />
+        {new Array(300)
+          .fill(null)
+          .map(() => new Array(300).fill(null))
+          .map((row, rowIdx) =>
+            row.map((_, colIdx) => (
+              <rect
+                x={`${rowIdx * 11}`}
+                y={`${colIdx * 11}`}
+                width="10"
+                height="10"
+                rx="3"
+                stroke-width="1"
+                stroke="black"
+                fill="red"
+              />
+            ))
+          )}
       </svg>
     </div>
   );
