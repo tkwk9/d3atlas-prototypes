@@ -26,40 +26,48 @@ const CanvasStressTest = () => {
       "#341f1f",
     ];
 
-    new Array(300)
+    const scaleBy = 1.5;
+    stage.on("wheel", (e) => {
+      const oldScale = stage.scaleX();
+      const pointer = stage.getPointerPosition();
+
+      const mousePointTo = {
+        x: (pointer.x - stage.x()) / oldScale,
+        y: (pointer.y - stage.y()) / oldScale,
+      };
+
+      let direction = e.evt.deltaY > 0 ? 1 : -1;
+
+      if (e.evt.ctrlKey) {
+        direction = -direction;
+      }
+
+      const newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+
+      stage.scale({ x: newScale, y: newScale });
+
+      const newPos = {
+        x: pointer.x - mousePointTo.x * newScale,
+        y: pointer.y - mousePointTo.y * newScale,
+      };
+      stage.position(newPos);
+    });
+
+    new Array(100)
       .fill(null)
-      .map(() => new Array(300).fill(null))
+      .map(() => new Array(100).fill(null))
       .forEach((row, rowIdx) =>
         row.forEach((_, colIdx) => {
           const box = new Konva.Rect({
-            x: rowIdx * 7 + 300,
-            y: colIdx * 7 + 100,
+            x: rowIdx * 12 + 100,
+            y: colIdx * 12 + 100,
             fill: colors[1],
             stroke: "black",
             strokeWidth: 1,
-            width: 5,
-            height: 5,
+            width: 10,
+            height: 10,
             cornerRadius: 1,
           });
-
-          box.on("dragstart", () => {
-            box.moveToTop();
-          });
-
-          box.on("dragmove", () => {
-            document.body.style.cursor = "pointer";
-          });
-          box.on("dblclick dbltap", () => {
-            box.destroy();
-          });
-
-          box.on("mouseover", () => {
-            document.body.style.cursor = "pointer";
-          });
-          box.on("mouseout", () => {
-            document.body.style.cursor = "default";
-          });
-
           layer.add(box);
         })
       );
