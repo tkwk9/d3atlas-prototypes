@@ -9,6 +9,7 @@ module.exports = {
     path: path.join(__dirname, "build"),
     filename: "[name].bundle.js",
     publicPath: "/",
+    assetModuleFilename: "assets/[hash].[ext]"
   },
   mode: "development",
   resolve: {
@@ -35,22 +36,9 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif|mp3)$/i,
+        test: /\.(txt|csv|tsv|mmdb|png|svg|jpg|jpeg|gif|mp3)$/i,
         type: "asset/resource",
-        // TODO: figure out how to add dest
-      },
-      {
-        test: /\.(txt|csv|tsv|mmdb)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "assets/[hash].[ext]",
-              emitFile: true,
-            },
-          },
-        ],
-      },
+      }
     ],
   },
   plugins: [
