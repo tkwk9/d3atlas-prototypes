@@ -8,7 +8,8 @@
     "build-prod": "webpack --config webpack.prod.config.js",
     "watch": "webpack watch --config webpack.dev.config.js",
     "dev": "wrangler pages dev ./build",
-    "deploy-prod": "npm run build-prod && sudo wrangler pages deploy ./build"
+    "deploy-prod": "npm run build-prod && sudo wrangler pages deploy ./build",
+    "deploy": "sudo wrangler pages deploy ./build"
   },
   "author": "tkwk9",
   "license": "ISC",
