@@ -12,7 +12,14 @@ const AudVis = () => {
     const context = new AudioContext();
     const analyser = context.createAnalyser();
     const numPoints = analyser.frequencyBinCount;
-    const audioDataArray = new Uint8Array(numPoints);
+    const audData = new Uint8Array(numPoints);
+
+    setInterval(() => {
+      analyser.getByteFrequencyData(audData);
+      console.log(audData);
+    }, 1000)
+
+
 
     const audio = new Audio(song);
     audio.loop = true;
