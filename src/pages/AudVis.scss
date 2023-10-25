@@ -12,4 +12,9 @@
     top: 50px;
     color: rgb(162, 162, 162);
   }
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 500px;
+  }
 }
