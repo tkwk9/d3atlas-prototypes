@@ -12,34 +12,46 @@ const AudVis = () => {
   const audio = new Audio(song);
   audio.loop = true;
 
-  audio.load();
-
   const audContext = new AudioContext();
-
   const source = audContext.createMediaElementSource(audio);
   const analyser = audContext.createAnalyser();
+  analyser.fftSize = 4096;
 
   source.connect(analyser);
-  analyser.connect(audContext.destination);
+  source.connect(audContext.destination);
 
   const freqArr = new Uint8Array(analyser.frequencyBinCount);
+
+  let reqId;
   const getAudData = () => {
     analyser.getByteFrequencyData(freqArr);
     setAudData(freqArr);
-    requestAnimationFrame(getAudData);
+    reqId = requestAnimationFrame(getAudData);
   };
-  requestAnimationFrame(getAudData);
 
+  let isPlaying = false;
   const play = () => {
-    audio.currentTime = 0;
-    audContext.resume();
-    audio.play();
+    if (isPlaying) {
+      cancelAnimationFrame(reqId);
+      audio.pause();
+    } else {
+      audContext.resume();
+      audio.play();
+      reqId = requestAnimationFrame(getAudData);
+    }
+    isPlaying = !isPlaying;
   };
 
   return (
     <div class="AudVis">
-      <h1 class="title">AudVis: CP</h1>
-      <button onclick={play}>clickme</button>
+      <div
+        class="title"
+        style={`display: flex;flex-direction: column;justify-content: center;align-items: center`}
+      >
+        <h1 style={`padding: 0 0 20px`}>AudVis: CP</h1>
+        <button onclick={play}>clickme</button>
+      </div>
+
       <div class={`wrapper`}>
         <Index each={audData}>{(item) => <div>{item}</div>}</Index>
       </div>
