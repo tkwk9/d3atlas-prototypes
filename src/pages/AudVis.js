@@ -8,43 +8,38 @@ import "./AudVis.scss";
 
 const AudVis = () => {
   const [audData, setAudData] = createStore([]);
-  let buttonRef;
 
-  const play = () => {
-    buttonRef.remove();
+  const audio = new Audio(song);
+  audio.loop = true;
 
-    const audio = new Audio(song);
-    audio.loop = true;
-    audio.load();
+  audio.load();
 
-    const audContext = new AudioContext();
-    const analyser = audContext.createAnalyser();
-    const numPoints = analyser.frequencyBinCount;
-    const audData = new Uint8Array(numPoints);
+  const audContext = new AudioContext();
 
-    audio.addEventListener("canplay", () => {
-      const source = audContext.createMediaElementSource(audio);
-      source.connect(analyser);
-      analyser.connect(audContext.destination);
-    });
+  const source = audContext.createMediaElementSource(audio);
+  const analyser = audContext.createAnalyser();
 
-    audio.play();
+  source.connect(analyser);
+  analyser.connect(audContext.destination);
 
-    const getAudData = () => {
-      analyser.getByteFrequencyData(audData);
-      setAudData(audData);
-      requestAnimationFrame(getAudData);
-    };
+  const freqArr = new Uint8Array(analyser.frequencyBinCount);
+  const getAudData = () => {
+    analyser.getByteFrequencyData(freqArr);
+    setAudData(freqArr);
     requestAnimationFrame(getAudData);
   };
+  requestAnimationFrame(getAudData);
 
-  onMount(() => {});
+  const play = () => {
+    audio.currentTime = 0;
+    audContext.resume();
+    audio.play();
+  };
+
   return (
     <div class="AudVis">
       <h1 class="title">AudVis: CP</h1>
-      <button id={`removeme`} ref={buttonRef} onclick={play}>
-        clickme
-      </button>
+      <button onclick={play}>clickme</button>
       <div class={`wrapper`}>
         <Index each={audData}>{(item) => <div>{item}</div>}</Index>
       </div>
