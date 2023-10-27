@@ -12,4 +12,9 @@
     top: 50px;
     color: rgb(162, 162, 162);
   }
+  .slot {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
