@@ -1,20 +1,19 @@
 import { onMount, createSignal } from "solid-js";
 
-import "./SvgStressTest.scss";
+import "./MineSweeper300.scss";
 
-const SvgStressTest = () => {
+const MineSweeper300 = () => {
   let svgRef;
   const [dragPoint, setDragPoint] = createSignal(null);
-
   return (
-    <div class="SvgStressTest">
-      <h1 class="title">SVG Stress Test: U</h1>
+    <div class="MineSweeper300">
+      <h1 class="title">MineSweeper300: PoC</h1>
       <svg
         id={`MainSvg`}
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox="0, 0, 1000, 1000"
+        viewBox="-500, -500, 1000, 1000"
         onmousedown={(e) =>
           setDragPoint({
             x: svgRef.viewBox.baseVal.x,
@@ -46,16 +45,16 @@ const SvgStressTest = () => {
         }
         onmouseleave={(e) => setDragPoint(null)}
       >
-        {new Array(300)
+        {new Array(20)
           .fill(null)
-          .map(() => new Array(300).fill(null))
+          .map(() => new Array(20).fill(null))
           .map((row, rowIdx) =>
             row.map((_, colIdx) => (
               <rect
-                x={`${rowIdx * 12}`}
-                y={`${colIdx * 12}`}
-                width="10"
-                height="10"
+                x={`${rowIdx * 22 - (row.length * 11 - 1)}`}
+                y={`${colIdx * 22 - (row.length * 11 - 1)}`}
+                width={20}
+                height={20}
                 rx="1"
                 stroke-width="0.5"
                 stroke="black"
@@ -68,4 +67,4 @@ const SvgStressTest = () => {
   );
 };
 
-export default SvgStressTest;
+export default MineSweeper300;

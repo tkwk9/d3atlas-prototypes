@@ -10,6 +10,7 @@ import Minesweeper from "./pages/Minesweeper.js";
 import SvgStressTest from "./pages/SvgStressTest.js";
 import CanvasStressTest from "./pages/CanvasStressTest.js";
 import AudVis from "./pages/AudVis.js";
+import Minesweeper300 from "./pages/MineSweeper300.js";
 import "./App.scss";
 
 const NavBar = () => (
@@ -24,6 +25,7 @@ const NavBar = () => (
     <A href="/svgstresstest">SvgStressTest</A>
     <A href="/canvasstresstest">CanvasStressTest</A>
     <A href="/audvis">AudVis</A>
+    <A href="/minesweeper300">Minesweeper300</A>
   </div>
 );
 
@@ -50,6 +52,7 @@ const Content = () => {
         <Route path="/svgstresstest" end component={SvgStressTest} />
         <Route path="/canvasstresstest" end component={CanvasStressTest} />
         <Route path="/audvis" end component={AudVis} />
+        <Route path="/minesweeper300" end component={Minesweeper300} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
