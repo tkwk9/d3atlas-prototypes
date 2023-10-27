@@ -1,6 +1,4 @@
 import { onMount, createSignal } from "solid-js";
-import anime from "animejs";
-import Victor from "victor";
 
 import "./SvgStressTest.scss";
 
@@ -25,8 +23,17 @@ const SvgStressTest = () => {
             height: svgRef.viewBox.baseVal.height,
             clientX: e.clientX,
             clientY: e.clientY,
-          }) && console.log(svgRef.viewBox)
+          })
         }
+        onwheel={(e) => {
+          svgRef.setAttribute(
+            "viewBox",
+            `${svgRef.viewBox.baseVal.x}, ${svgRef.viewBox.baseVal.y}, ${
+              svgRef.viewBox.baseVal.width - e.deltaY
+            },${svgRef.viewBox.baseVal.height - e.deltaY}`
+          );
+          console.log(e.deltaX, e.deltaY);
+        }}
         onmouseup={(e) => setDragPoint(null)}
         onmousemove={(e) =>
           dragPoint() &&

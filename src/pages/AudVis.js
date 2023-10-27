@@ -1,7 +1,5 @@
 import { onMount, createSignal, Index } from "solid-js";
 import { createStore } from "solid-js/store";
-import anime from "animejs";
-import Victor from "victor";
 import song from "../assets/Breakers_Break_Daft_Punk_Mash_Up.mp3";
 
 import "./AudVis.scss";
@@ -46,7 +44,7 @@ const AudVis = () => {
     <div class="AudVis">
       <div
         class="title"
-        style={`display: flex;flex-direction: column;justify-content: center;align-items: center`}
+        style={`display:flex;flex-direction:column;justify-content:center;align-items:center`}
       >
         <h1 style={`padding: 0 0 20px`}>AudVis: CP</h1>
         <button onclick={play}>clickme</button>
