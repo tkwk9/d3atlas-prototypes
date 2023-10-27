@@ -6,7 +6,8 @@ import "./MineSweeper300.scss";
 
 const baseIdleColor = "#b3b3b3";
 const baseHoverColor = "#8f8f8f";
-const disabledColor = "#434343";
+const baseclickedColor = "#605f5f";
+const disabledColor = "#303030";
 
 const Slot = (props) => {
   let ref;
@@ -25,6 +26,25 @@ const Slot = (props) => {
       targets: ref,
       strokeWidth: "0.5",
       fill: baseIdleColor,
+      duration: 50,
+      easing: "easeInOutSine",
+    });
+  };
+
+  const handleMouseDown = (e) => {
+    anime({
+      targets: ref,
+      strokeWidth: "3",
+      fill: baseclickedColor,
+      duration: 50,
+      easing: "easeInOutSine",
+    });
+  };
+  const handleMouseUp = (e) => {
+    anime({
+      targets: ref,
+      strokeWidth: "1",
+      fill: baseHoverColor,
       duration: 50,
       easing: "easeInOutSine",
     });
@@ -50,11 +70,13 @@ const Slot = (props) => {
       onmouseleave={
         props.colIdx > 19 || props.rowIdx > 19 ? null : handleMouseLeave
       }
+      onmousedown={handleMouseDown}
+      onmouseup={handleMouseUp}
     />
   );
 };
 
-const mapSize = 75;
+const mapSize = 80;
 const MineSweeper300 = () => {
   const [dragPoint, setDragPoint] = createSignal(null);
   const [boardState, setBoardState] = createStore(
@@ -153,18 +175,6 @@ const MineSweeper300 = () => {
             </Index>
           )}
         </Index>
-        {/* {new Array(20)
-          .fill(null)
-          .map(() => new Array(20).fill(null))
-          .map((row, rowIdx) =>
-            row.map((_, colIdx) => (
-              <Slot
-                x={`${rowIdx * 34 - (row.length * 17 - 1)}`}
-                y={`${colIdx * 34 - (row.length * 17 - 1)}`}
-                size={30}
-              />
-            ))
-          )} */}
       </svg>
     </div>
   );
