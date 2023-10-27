@@ -1,13 +1,15 @@
-import { onMount, createSignal } from "solid-js";
+import { onMount, createSignal, Index } from "solid-js";
+import { createStore } from "solid-js/store";
 import anime from "animejs";
 
 import "./MineSweeper300.scss";
 
+const baseIdleColor = "#b3b3b3";
+const baseHoverColor = "#8f8f8f";
+const disabledColor = "#434343";
+
 const Slot = (props) => {
   let ref;
-
-  const baseIdleColor = "#b3b3b3";
-  const baseHoverColor = "#757575"
 
   const handleMouseEnter = (e) => {
     anime({
@@ -27,32 +29,48 @@ const Slot = (props) => {
       easing: "easeInOutSine",
     });
   };
+
   return (
     <rect
-    class={`slot`}
+      class={`slot`}
       ref={ref}
       x={props.x}
       y={props.y}
-      width={20}
-      height={20}
-      rx="1"
+      width={props.size}
+      height={props.size}
+      rx="2"
       stroke-width="0.5"
       stroke="#303030"
-      fill={baseIdleColor}
-      onmouseenter={handleMouseEnter}
-      onmouseleave={handleMouseLeave}
+      fill={
+        props.colIdx > 19 || props.rowIdx > 19 ? disabledColor : baseIdleColor
+      }
+      onmouseenter={
+        props.colIdx > 19 || props.rowIdx > 19 ? null : handleMouseEnter
+      }
+      onmouseleave={
+        props.colIdx > 19 || props.rowIdx > 19 ? null : handleMouseLeave
+      }
     />
   );
 };
 
+const mapSize = 75;
 const MineSweeper300 = () => {
+  const [dragPoint, setDragPoint] = createSignal(null);
+  const [boardState, setBoardState] = createStore(
+    new Array(mapSize)
+      .fill(null)
+      .map(() => new Array(mapSize).fill(null))
+      .map((row) => row.map(() => 0))
+  );
+
   let svgRef;
   let svgPoint;
   onMount(() => {
     svgPoint = svgRef.createSVGPoint();
   });
 
-  const [dragPoint, setDragPoint] = createSignal(null);
+  // --- --- --- \\
 
   const handleMouseDown = (e) => {
     svgPoint.x = e.clientX;
@@ -120,17 +138,33 @@ const MineSweeper300 = () => {
         onmousemove={handleMouseMove}
         onmouseleave={handleMouseLeave}
       >
-        {new Array(20)
+        <Index each={boardState}>
+          {(row, rowIdx) => (
+            <Index each={row()}>
+              {(_, colIdx) => (
+                <Slot
+                  x={`${rowIdx * 34 - (20 * 17 - 1)}`}
+                  y={`${colIdx * 34 - (20 * 17 - 1)}`}
+                  rowIdx={rowIdx}
+                  colIdx={colIdx}
+                  size={30}
+                />
+              )}
+            </Index>
+          )}
+        </Index>
+        {/* {new Array(20)
           .fill(null)
           .map(() => new Array(20).fill(null))
           .map((row, rowIdx) =>
             row.map((_, colIdx) => (
               <Slot
-                x={`${rowIdx * 22 - (row.length * 11 - 1)}`}
-                y={`${colIdx * 22 - (row.length * 11 - 1)}`}
+                x={`${rowIdx * 34 - (row.length * 17 - 1)}`}
+                y={`${colIdx * 34 - (row.length * 17 - 1)}`}
+                size={30}
               />
             ))
-          )}
+          )} */}
       </svg>
     </div>
   );
