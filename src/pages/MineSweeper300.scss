@@ -11,8 +11,9 @@
     position: absolute;
     top: 50px;
     color: rgb(162, 162, 162);
+    user-select: none;
   }
-  .slot {
+  .clickable {
     &:hover {
       cursor: pointer;
     }

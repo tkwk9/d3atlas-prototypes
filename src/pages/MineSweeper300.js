@@ -32,6 +32,7 @@ const Slot = (props) => {
   };
 
   const handleMouseDown = (e) => {
+    e.stopPropagation();
     anime({
       targets: ref,
       strokeWidth: "3",
@@ -41,6 +42,7 @@ const Slot = (props) => {
     });
   };
   const handleMouseUp = (e) => {
+    e.stopPropagation();
     anime({
       targets: ref,
       strokeWidth: "1",
@@ -50,9 +52,11 @@ const Slot = (props) => {
     });
   };
 
+  const isDisabled = props.colIdx > 19 || props.rowIdx > 19;
+
   return (
     <rect
-      class={`slot`}
+      class={`slot ${isDisabled ? "disabled" : "clickable"}`}
       ref={ref}
       x={props.x}
       y={props.y}
@@ -62,16 +66,16 @@ const Slot = (props) => {
       stroke-width="0.5"
       stroke="#303030"
       fill={
-        props.colIdx > 19 || props.rowIdx > 19 ? disabledColor : baseIdleColor
+        isDisabled ? disabledColor : baseIdleColor
       }
       onmouseenter={
-        props.colIdx > 19 || props.rowIdx > 19 ? null : handleMouseEnter
+        isDisabled ? null : handleMouseEnter
       }
       onmouseleave={
-        props.colIdx > 19 || props.rowIdx > 19 ? null : handleMouseLeave
+        isDisabled ? null : handleMouseLeave
       }
-      onmousedown={handleMouseDown}
-      onmouseup={handleMouseUp}
+      onmousedown={isDisabled ? null : handleMouseDown}
+      onmouseup={isDisabled ? null : handleMouseUp}
     />
   );
 };
@@ -154,6 +158,7 @@ const MineSweeper300 = () => {
         width="100%"
         height="100%"
         viewBox="-500, -500, 1000, 1000"
+        oncontextmenu="return false;"
         onmousedown={handleMouseDown}
         onwheel={handleWheel}
         onmouseup={handleMouseUp}
