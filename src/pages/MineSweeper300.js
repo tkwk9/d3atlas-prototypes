@@ -4,8 +4,8 @@ import anime from "animejs";
 
 import "./MineSweeper300.scss";
 
-const baseIdleColor = "#b3b3b3";
-const baseHoverColor = "#8f8f8f";
+const baseIdleColor = "#878787";
+const baseHoverColor = "#757575";
 const baseclickedColor = "#605f5f";
 const disabledColor = "#303030";
 
@@ -15,7 +15,6 @@ const Slot = (props) => {
   const handleMouseEnter = (e) => {
     anime({
       targets: ref,
-      strokeWidth: "1",
       fill: baseHoverColor,
       duration: 50,
       easing: "easeInOutSine",
@@ -24,7 +23,6 @@ const Slot = (props) => {
   const handleMouseLeave = (e) => {
     anime({
       targets: ref,
-      strokeWidth: "0.5",
       fill: baseIdleColor,
       duration: 50,
       easing: "easeInOutSine",
@@ -35,7 +33,6 @@ const Slot = (props) => {
     e.stopPropagation();
     anime({
       targets: ref,
-      strokeWidth: "3",
       fill: baseclickedColor,
       duration: 50,
       easing: "easeInOutSine",
@@ -45,7 +42,6 @@ const Slot = (props) => {
     e.stopPropagation();
     anime({
       targets: ref,
-      strokeWidth: "1",
       fill: baseHoverColor,
       duration: 50,
       easing: "easeInOutSine",
@@ -65,15 +61,9 @@ const Slot = (props) => {
       rx="2"
       stroke-width="0.5"
       stroke="#303030"
-      fill={
-        isDisabled ? disabledColor : baseIdleColor
-      }
-      onmouseenter={
-        isDisabled ? null : handleMouseEnter
-      }
-      onmouseleave={
-        isDisabled ? null : handleMouseLeave
-      }
+      fill={isDisabled ? disabledColor : baseIdleColor}
+      onmouseenter={isDisabled ? null : handleMouseEnter}
+      onmouseleave={isDisabled ? null : handleMouseLeave}
       onmousedown={isDisabled ? null : handleMouseDown}
       onmouseup={isDisabled ? null : handleMouseUp}
     />
@@ -170,8 +160,8 @@ const MineSweeper300 = () => {
             <Index each={row()}>
               {(_, colIdx) => (
                 <Slot
-                  x={`${rowIdx * 34 - (20 * 17 - 1)}`}
-                  y={`${colIdx * 34 - (20 * 17 - 1)}`}
+                  x={`${rowIdx * 36 - (20 * 18 - 1)}`}
+                  y={`${colIdx * 36 - (20 * 18 - 1)}`}
                   rowIdx={rowIdx}
                   colIdx={colIdx}
                   size={30}
