@@ -4,15 +4,22 @@ import anime from "animejs";
 
 import "./MineSweeper300.scss";
 
+// Slot stuff
+
 const baseIdleColor = "#878787";
 const baseHoverColor = "#757575";
-const baseclickedColor = "#605f5f";
+const basePressedColor = "#605f5f";
+const baseClickedColor = "#808080";
 const disabledColor = "#303030";
 
 const Slot = (props) => {
+  const [getIsClicked, setIsClicked] = createSignal(false);
+
   let ref;
 
+  // Hover
   const handleMouseEnter = (e) => {
+    if (getIsClicked()) return;
     anime({
       targets: ref,
       fill: baseHoverColor,
@@ -21,6 +28,7 @@ const Slot = (props) => {
     });
   };
   const handleMouseLeave = (e) => {
+    if (getIsClicked()) return;
     anime({
       targets: ref,
       fill: baseIdleColor,
@@ -29,23 +37,33 @@ const Slot = (props) => {
     });
   };
 
+  // Click
   const handleMouseDown = (e) => {
     e.stopPropagation();
-    anime({
-      targets: ref,
-      fill: baseclickedColor,
-      duration: 50,
-      easing: "easeInOutSine",
-    });
+    if (getIsClicked()) {
+      // do stuff
+    } else {
+      anime({
+        targets: ref,
+        fill: basePressedColor,
+        duration: 50,
+        easing: "easeInOutSine",
+      });
+    }
   };
   const handleMouseUp = (e) => {
     e.stopPropagation();
-    anime({
-      targets: ref,
-      fill: baseHoverColor,
-      duration: 50,
-      easing: "easeInOutSine",
-    });
+    if (getIsClicked()) {
+      // do stuff
+    } else {
+      setIsClicked(true);
+      anime({
+        targets: ref,
+        fill: baseClickedColor,
+        duration: 50,
+        easing: "easeInOutSine",
+      });
+    }
   };
 
   const isDisabled = props.colIdx > 19 || props.rowIdx > 19;
@@ -70,9 +88,11 @@ const Slot = (props) => {
   );
 };
 
+// Map Stuff
+
 const mapSize = 80;
 const MineSweeper300 = () => {
-  const [dragPoint, setDragPoint] = createSignal(null);
+  const [getDragPoint, setDragPoint] = createSignal(null);
   const [boardState, setBoardState] = createStore(
     new Array(mapSize)
       .fill(null)
@@ -124,18 +144,19 @@ const MineSweeper300 = () => {
   };
 
   const handleMouseMove = (e) => {
-    if (!dragPoint()) return;
+    const dragPointxx = getDragPoint();
+    if (!dragPointxx) return;
 
     const svgPoint = svgRef.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
-    const mappedPoint = svgPoint.matrixTransform(dragPoint().screenCtm);
+    const mappedPoint = svgPoint.matrixTransform(dragPointxx.screenCtm);
 
     svgRef.setAttribute(
       "viewBox",
-      `${dragPoint().x + (dragPoint().mappedPoint.x - mappedPoint.x)}, ${
-        dragPoint().y + (dragPoint().mappedPoint.y - mappedPoint.y)
-      }, ${dragPoint().width},${dragPoint().height}`
+      `${dragPointxx.x + (dragPointxx.mappedPoint.x - mappedPoint.x)}, ${
+        dragPointxx.y + (dragPointxx.mappedPoint.y - mappedPoint.y)
+      }, ${dragPointxx.width},${dragPointxx.height}`
     );
   };
 
