@@ -7,15 +7,26 @@ import "./MineSweeper300.scss";
 // Slot stuff
 
 const baseIdleColor = "#878787";
-const baseHoverColor = "#757575";
+const baseHoverColor = "#949494";
 const basePressedColor = "#605f5f";
-const baseClickedColor = "#808080";
+const baseClickedColor = "#6d4646";
 const disabledColor = "#303030";
 
 const Slot = (props) => {
   const [getIsClicked, setIsClicked] = createSignal(false);
+  const [getIsDisabled, setIsDisabled] = createSignal(
+    props.colIdx > 19 || props.rowIdx > 19
+  );
 
   let ref;
+
+  const disable = () => {
+    ref.style.pointerEvents = "none";
+  };
+
+  const enable = () => {
+    ref.style.cursor = "pointer";
+  };
 
   // Hover
   const handleMouseEnter = (e) => {
@@ -68,9 +79,13 @@ const Slot = (props) => {
 
   const isDisabled = props.colIdx > 19 || props.rowIdx > 19;
 
+  onMount(() => {
+    getIsDisabled() ? disable() : enable();
+  });
+
   return (
     <rect
-      class={`slot ${isDisabled ? "disabled" : "clickable"}`}
+      class={`slot`}
       ref={ref}
       x={props.x}
       y={props.y}
