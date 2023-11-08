@@ -4,8 +4,7 @@ import anime from "animejs";
 
 import "./MineSweeper300.scss";
 
-// Slot stuff
-
+// Slot Stuff
 const baseIdleColor = "#878787";
 const baseHoverColor = "#949494";
 const basePressedColor = "#605f5f";
@@ -13,24 +12,15 @@ const baseClickedColor = "#6d4646";
 const disabledColor = "#303030";
 
 const Slot = (props) => {
-  const [getIsClicked, setIsClicked] = createSignal(false);
-  const [getIsDisabled, setIsDisabled] = createSignal(
+  let ref;
+  const [_getIsClicked, _setIsClicked] = createSignal(false);
+  const [_getIsDisabled, _setIsDisabled] = createSignal(
     props.colIdx > 19 || props.rowIdx > 19
   );
 
-  let ref;
-
-  const disable = () => {
-    ref.style.pointerEvents = "none";
-  };
-
-  const enable = () => {
-    ref.style.cursor = "pointer";
-  };
-
-  // Hover
+  // Hover Handlers
   const handleMouseEnter = (e) => {
-    if (getIsClicked()) return;
+    if (_getIsClicked()) return;
     anime({
       targets: ref,
       fill: baseHoverColor,
@@ -39,7 +29,7 @@ const Slot = (props) => {
     });
   };
   const handleMouseLeave = (e) => {
-    if (getIsClicked()) return;
+    if (_getIsClicked()) return;
     anime({
       targets: ref,
       fill: baseIdleColor,
@@ -47,11 +37,12 @@ const Slot = (props) => {
       easing: "easeInOutSine",
     });
   };
+  // Hover Handlers
 
-  // Click
+  // Click Hanlders
   const handleMouseDown = (e) => {
     e.stopPropagation();
-    if (getIsClicked()) {
+    if (_getIsClicked()) {
       // do stuff
     } else {
       anime({
@@ -64,10 +55,10 @@ const Slot = (props) => {
   };
   const handleMouseUp = (e) => {
     e.stopPropagation();
-    if (getIsClicked()) {
+    if (_getIsClicked()) {
       // do stuff
     } else {
-      setIsClicked(true);
+      _setIsClicked(true);
       anime({
         targets: ref,
         fill: baseClickedColor,
@@ -76,13 +67,13 @@ const Slot = (props) => {
       });
     }
   };
-
-  const isDisabled = props.colIdx > 19 || props.rowIdx > 19;
+  // Click Hanlders
 
   onMount(() => {
-    getIsDisabled() ? disable() : enable();
+    ref.style.cursor = _getIsDisabled() ? "default" : "pointer";
   });
 
+  const isDisabled = _getIsDisabled();
   return (
     <rect
       class={`slot`}
@@ -102,10 +93,10 @@ const Slot = (props) => {
     />
   );
 };
+// Slot Stuff
 
 // Map Stuff
-
-const mapSize = 80;
+const mapSize = 100;
 const MineSweeper300 = () => {
   const [getDragPoint, setDragPoint] = createSignal(null);
   const [boardState, setBoardState] = createStore(
@@ -159,19 +150,19 @@ const MineSweeper300 = () => {
   };
 
   const handleMouseMove = (e) => {
-    const dragPointxx = getDragPoint();
-    if (!dragPointxx) return;
+    const dragPoint = getDragPoint();
+    if (!dragPoint) return;
 
     const svgPoint = svgRef.createSVGPoint();
     svgPoint.x = e.clientX;
     svgPoint.y = e.clientY;
-    const mappedPoint = svgPoint.matrixTransform(dragPointxx.screenCtm);
+    const mappedPoint = svgPoint.matrixTransform(dragPoint.screenCtm);
 
     svgRef.setAttribute(
       "viewBox",
-      `${dragPointxx.x + (dragPointxx.mappedPoint.x - mappedPoint.x)}, ${
-        dragPointxx.y + (dragPointxx.mappedPoint.y - mappedPoint.y)
-      }, ${dragPointxx.width},${dragPointxx.height}`
+      `${dragPoint.x + (dragPoint.mappedPoint.x - mappedPoint.x)}, ${
+        dragPoint.y + (dragPoint.mappedPoint.y - mappedPoint.y)
+      }, ${dragPoint.width},${dragPoint.height}`
     );
   };
 
@@ -210,5 +201,6 @@ const MineSweeper300 = () => {
     </div>
   );
 };
+// Map Stuff
 
 export default MineSweeper300;
