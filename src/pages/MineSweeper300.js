@@ -96,13 +96,115 @@ const Slot = (props) => {
 // Slot Stuff
 
 // Map Stuff
-const mapSize = 100;
+
+// this will need to become repurposable
+
+const perfAround = (
+  map,
+  // these should be args obj
+  cb = (map, val, rowIdx, colIdx) => true,
+  mainChecker = (map, val, rowIdx, colIdx) => true,
+  checker = (map, val, rowIdx, colIdx) => true,
+) => {
+  map.forEach((row, rowIdx) => {
+    row.forEach((val, colIdx) => {
+      if (!mainChecker(map, val, rowIdx, colIdx)) return;
+      if (
+        map[rowIdx - 1] &&
+        map[rowIdx - 1][colIdx - 1] !== undefined &&
+        checker(map, val, rowIdx - 1, colIdx - 1)
+      )
+        cb(map, val, rowIdx - 1, colIdx - 1);
+      if (
+        map[rowIdx - 1] &&
+        map[rowIdx - 1][colIdx] !== undefined &&
+        checker(map, val, rowIdx - 1, colIdx)
+      )
+        cb(map, val, rowIdx - 1, colIdx);
+      if (
+        map[rowIdx - 1] &&
+        map[rowIdx - 1][colIdx + 1] !== undefined &&
+        checker(map, val, rowIdx - 1, colIdx + 1)
+      )
+        cb(map, val, rowIdx - 1, colIdx + 1);
+      if (
+        map[rowIdx] &&
+        map[rowIdx][colIdx - 1] !== undefined &&
+        checker(map, val, rowIdx, colIdx - 1)
+      )
+        cb(map, val, rowIdx, colIdx - 1);
+      if (
+        map[rowIdx] &&
+        map[rowIdx][colIdx + 1] !== undefined &&
+        checker(map, val, rowIdx, colIdx + 1)
+      )
+        cb(map, val, rowIdx, colIdx + 1);
+      if (
+        map[rowIdx + 1] &&
+        map[rowIdx + 1][colIdx - 1] !== undefined &&
+        checker(map, val, rowIdx + 1, colIdx - 1)
+      )
+        cb(map, val, rowIdx + 1, colIdx - 1);
+      if (
+        map[rowIdx + 1] &&
+        map[rowIdx + 1][colIdx] !== undefined &&
+        checker(map, val, rowIdx + 1, colIdx)
+      )
+        cb(map, val, rowIdx + 1, colIdx);
+      if (
+        map[rowIdx + 1] &&
+        map[rowIdx + 1][colIdx + 1] !== undefined &&
+        checker(map, val, rowIdx + 1, colIdx + 1)
+      )
+        cb(map, val, rowIdx + 1, colIdx + 1);
+    });
+  });
+};
+
+const mineCount = 10;
+const mapSize = 10;
+const generateMineLocations = () => {
+  const mineLocations = new Array(mapSize)
+    .fill(undefined)
+    .map(() => new Array(mapSize).fill(null));
+  let counter = 0;
+  while (counter < mineCount) {
+    const row = Math.floor(Math.random() * mapSize);
+    const col = Math.floor(Math.random() * mapSize);
+    if (mineLocations[row][col]) continue;
+    mineLocations[row][col] = "M";
+    counter++;
+  }
+  return mineLocations;
+};
+
+const createMap = () => {
+  const baseMap = new Array(mapSize)
+    .fill(null)
+    .map(() => new Array(mapSize).fill(null))
+    .map((row) => row.map(() => 0));
+
+  const mineLocations = generateMineLocations();
+
+  perfAround(mineLocations, (map, val, rowIdx, colIdx) => {
+    baseMap[rowIdx][colIdx] += 1;
+  }, (map, val, rowIdx, colIdx) => val === "M");
+  mineLocations.forEach((row, rowIdx) => {
+    row.forEach((val, colIdx) => {
+      if (val == "M") baseMap[rowIdx][colIdx] = "M"
+    })
+  })
+  return baseMap;
+};
+
+const boardSize = 100;
 const MineSweeper300 = () => {
-  const [getDragPoint, setDragPoint] = createSignal(null);
+  const [_getDragPoint, setDragPoint] = createSignal(null);
+  const [map, setMap] = createStore(createMap());
   const [boardState, setBoardState] = createStore(
-    new Array(mapSize)
+    new Array(boardSize)
       .fill(null)
-      .map(() => new Array(mapSize).fill(null))
+      .map(() => new Array(boardSize).fill(null))
       .map((row) => row.map(() => 0))
   );
 
@@ -150,7 +252,7 @@ const MineSweeper300 = () => {
   };
 
   const handleMouseMove = (e) => {
-    const dragPoint = getDragPoint();
+    const dragPoint = _getDragPoint();
     if (!dragPoint) return;
 
     const svgPoint = svgRef.createSVGPoint();
