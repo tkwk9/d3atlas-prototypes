@@ -1,5 +1,6 @@
 import { onMount, createSignal, Index } from "solid-js";
 import { createStore } from "solid-js/store";
+import cloneDeep from "clone-deep";
 import anime from "animejs";
 
 import "./MineSweeper300.scss";
@@ -65,6 +66,12 @@ const Slot = (props) => {
         duration: 50,
         easing: "easeInOutSine",
       });
+      props.setBoardState((prevState) => {
+        const nextState = cloneDeep(prevState);
+        nextState[props.rowIdx][props.colIdx] = 1;
+        console.log(nextState);
+        return nextState;
+      })
     }
   };
   // Click Hanlders
@@ -294,6 +301,7 @@ const MineSweeper300 = () => {
                   rowIdx={rowIdx}
                   colIdx={colIdx}
                   size={30}
+                  setBoardState={setBoardState}
                 />
               )}
             </Index>
