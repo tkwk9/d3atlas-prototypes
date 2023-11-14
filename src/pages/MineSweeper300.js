@@ -81,22 +81,32 @@ const Slot = (props) => {
 
   const isDisabled = _getIsDisabled();
   return (
-    <rect
-      class={`slot`}
-      ref={ref}
-      x={props.x}
-      y={props.y}
-      width={props.size}
-      height={props.size}
-      rx="2"
-      stroke-width="0.5"
-      stroke="#303030"
-      fill={isDisabled ? disabledColor : baseIdleColor}
-      onmouseenter={isDisabled ? null : handleMouseEnter}
-      onmouseleave={isDisabled ? null : handleMouseLeave}
-      onmousedown={isDisabled ? null : handleMouseDown}
-      onmouseup={isDisabled ? null : handleMouseUp}
-    />
+    <>
+      <rect
+        class={`slot`}
+        ref={ref}
+        x={props.x}
+        y={props.y}
+        width={props.size}
+        height={props.size}
+        rx="2"
+        stroke-width="0.5"
+        stroke="#303030"
+        fill={isDisabled ? disabledColor : baseIdleColor}
+        onmouseenter={isDisabled ? null : handleMouseEnter}
+        onmouseleave={isDisabled ? null : handleMouseLeave}
+        onmousedown={isDisabled ? null : handleMouseDown}
+        onmouseup={isDisabled ? null : handleMouseUp}
+      />
+      <text
+        x={props.x}
+        y={props.y}
+        width={props.size}
+        height={props.size}
+      >
+        1
+      </text>
+    </>
   );
 };
 // Slot Stuff
