@@ -69,9 +69,8 @@ const Slot = (props) => {
       props.setBoardState((prevState) => {
         const nextState = cloneDeep(prevState);
         nextState[props.rowIdx][props.colIdx] = 1;
-        console.log(nextState);
         return nextState;
-      })
+      });
     }
   };
   // Click Hanlders
@@ -109,67 +108,67 @@ const Slot = (props) => {
 const perfAround = (
   map,
   // these should be args obj
-  cb = (map, val, rowIdx, colIdx) => true,
-  mainChecker = (map, val, rowIdx, colIdx) => true,
-  checker = (map, val, rowIdx, colIdx) => true,
+  cb = (val, rowIdx, colIdx) => true,
+  mainChecker = (val, rowIdx, colIdx) => true,
+  subChecker = (val, rowIdx, colIdx) => true
 ) => {
   map.forEach((row, rowIdx) => {
     row.forEach((val, colIdx) => {
-      if (!mainChecker(map, val, rowIdx, colIdx)) return;
+      if (!mainChecker(val, rowIdx, colIdx)) return;
       if (
         map[rowIdx - 1] &&
         map[rowIdx - 1][colIdx - 1] !== undefined &&
-        checker(map, val, rowIdx - 1, colIdx - 1)
+        subChecker(val, rowIdx - 1, colIdx - 1)
       )
-        cb(map, val, rowIdx - 1, colIdx - 1);
+        cb(val, rowIdx - 1, colIdx - 1);
       if (
         map[rowIdx - 1] &&
         map[rowIdx - 1][colIdx] !== undefined &&
-        checker(map, val, rowIdx - 1, colIdx)
+        subChecker(val, rowIdx - 1, colIdx)
       )
-        cb(map, val, rowIdx - 1, colIdx);
+        cb(val, rowIdx - 1, colIdx);
       if (
         map[rowIdx - 1] &&
         map[rowIdx - 1][colIdx + 1] !== undefined &&
-        checker(map, val, rowIdx - 1, colIdx + 1)
+        subChecker(val, rowIdx - 1, colIdx + 1)
       )
-        cb(map, val, rowIdx - 1, colIdx + 1);
+        cb(val, rowIdx - 1, colIdx + 1);
       if (
         map[rowIdx] &&
         map[rowIdx][colIdx - 1] !== undefined &&
-        checker(map, val, rowIdx, colIdx - 1)
+        subChecker(val, rowIdx, colIdx - 1)
       )
-        cb(map, val, rowIdx, colIdx - 1);
+        cb(val, rowIdx, colIdx - 1);
       if (
         map[rowIdx] &&
         map[rowIdx][colIdx + 1] !== undefined &&
-        checker(map, val, rowIdx, colIdx + 1)
+        subChecker(val, rowIdx, colIdx + 1)
       )
-        cb(map, val, rowIdx, colIdx + 1);
+        cb(val, rowIdx, colIdx + 1);
       if (
         map[rowIdx + 1] &&
         map[rowIdx + 1][colIdx - 1] !== undefined &&
-        checker(map, val, rowIdx + 1, colIdx - 1)
+        subChecker(val, rowIdx + 1, colIdx - 1)
       )
-        cb(map, val, rowIdx + 1, colIdx - 1);
+        cb(val, rowIdx + 1, colIdx - 1);
       if (
         map[rowIdx + 1] &&
         map[rowIdx + 1][colIdx] !== undefined &&
-        checker(map, val, rowIdx + 1, colIdx)
+        subChecker(val, rowIdx + 1, colIdx)
       )
-        cb(map, val, rowIdx + 1, colIdx);
+        cb(val, rowIdx + 1, colIdx);
       if (
         map[rowIdx + 1] &&
         map[rowIdx + 1][colIdx + 1] !== undefined &&
-        checker(map, val, rowIdx + 1, colIdx + 1)
+        subChecker(val, rowIdx + 1, colIdx + 1)
       )
-        cb(map, val, rowIdx + 1, colIdx + 1);
+        cb(val, rowIdx + 1, colIdx + 1);
     });
   });
 };
 
-const mineCount = 10;
-const mapSize = 10;
+const mineCount = 20;
+const mapSize = 20;
 const generateMineLocations = () => {
   const mineLocations = new Array(mapSize)
     .fill(undefined)
@@ -193,14 +192,18 @@ const createMap = () => {
 
   const mineLocations = generateMineLocations();
 
-  perfAround(mineLocations, (map, val, rowIdx, colIdx) => {
-    baseMap[rowIdx][colIdx] += 1;
-  }, (map, val, rowIdx, colIdx) => val === "M");
+  perfAround(
+    mineLocations,
+    (val, rowIdx, colIdx) => {
+      baseMap[rowIdx][colIdx] += 1;
+    },
+    (val, rowIdx, colIdx) => val === "M"
+  );
   mineLocations.forEach((row, rowIdx) => {
     row.forEach((val, colIdx) => {
-      if (val == "M") baseMap[rowIdx][colIdx] = "M"
-    })
-  })
+      if (val == "M") baseMap[rowIdx][colIdx] = "M";
+    });
+  });
   return baseMap;
 };
 
@@ -208,6 +211,7 @@ const boardSize = 100;
 const MineSweeper300 = () => {
   const [_getDragPoint, setDragPoint] = createSignal(null);
   const [map, setMap] = createStore(createMap());
+  console.log(map);
   const [boardState, setBoardState] = createStore(
     new Array(boardSize)
       .fill(null)
