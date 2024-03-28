@@ -1,15 +1,16 @@
 import { onMount, createSignal, Index } from "solid-js";
 import { createStore } from "solid-js/store";
-import CanvasKitInit from 'canvaskit-wasm';
-
+import CanvasKitInit from "canvaskit-wasm";
 
 import "./SkiaSandbox.scss";
 
 const SkiaSandbox = () => {
   CanvasKitInit({
     // TODO: figure out how to host this from cloudflare worker
-    locateFile: (file) => 'https://unpkg.com/canvaskit-wasm@0.39.1/bin/'+file}).then((CanvasKit) => {
-    const surface = CanvasKit.MakeCanvasSurface('myCanvas');
+    locateFile: (file) => "https://unpkg.com/canvaskit-wasm@0.39.1/bin/" + file,
+  }).then((CanvasKit) => {
+    // MakeSWCanvasSurface MakeWebGLCanvasSurface MakeGPUCanvasSurface
+    const surface = CanvasKit.MakeWebGLCanvasSurface("myCanvas");
 
     const paint = new CanvasKit.Paint();
     paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
