@@ -31,7 +31,7 @@ const SkiaSandbox = () => {
         class="title"
         style={`display:flex;flex-direction:column;justify-content:center;align-items:center`}
       >
-        <h1 style={`padding: 0 0 20px`}>Welcome Back World</h1>
+        <h1 style={`padding: 0 0 20px`}>Skia Sandbox</h1>
       </div>
       <canvas id="myCanvas" width="500" height="400"></canvas>
     </div>
