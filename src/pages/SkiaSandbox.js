@@ -12,17 +12,33 @@ const SkiaSandbox = () => {
     // MakeSWCanvasSurface MakeWebGLCanvasSurface MakeGPUCanvasSurface
     const surface = CanvasKit.MakeWebGLCanvasSurface("myCanvas");
 
-    const paint = new CanvasKit.Paint();
-    paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
-    paint.setStyle(CanvasKit.PaintStyle.Stroke);
-    paint.setAntiAlias(true);
-    const rr = CanvasKit.RRectXY(CanvasKit.LTRBRect(10, 60, 210, 260), 25, 15);
-
-    function draw(canvas) {
-      canvas.clear(CanvasKit.WHITE);
-      canvas.drawRRect(rr, paint);
+    const shaderCode = `
+    half4 main(float2 coord) {
+      float t = coord.x / 200;
+      half4 white = half4(1);
+      half4 black = half4(0,0,0,1);
+      return mix(white, black, t);
     }
-    surface.drawOnce(draw);
+    `;
+
+    const paint = new CanvasKit.Paint();
+    const shader = CanvasKit.RuntimeEffect.Make(shaderCode).makeShader([]);
+    paint.setShader(shader);
+
+    surface.getCanvas().drawRect(CanvasKit.LTRBRect(0, 0, 500, 400), paint);
+    surface.flush();
+
+    // const paint = new CanvasKit.Paint();
+    // paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
+    // paint.setStyle(CanvasKit.PaintStyle.Stroke);
+    // paint.setAntiAlias(true);
+    // const rr = CanvasKit.RRectXY(CanvasKit.LTRBRect(10, 60, 210, 260), 25, 25);
+
+    // function draw(canvas) {
+    //   canvas.clear(CanvasKit.WHITE);
+    //   canvas.drawRRect(rr, paint);
+    // }
+    // surface.drawOnce(draw);
   });
 
   return (
