@@ -14,6 +14,9 @@ module.exports = {
   mode: "development",
   resolve: {
     modules: ["node_modules"],
+    fallback: {
+      fs: false
+    }
   },
   module: {
     rules: [

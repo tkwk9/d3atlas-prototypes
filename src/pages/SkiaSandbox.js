@@ -1,35 +1,27 @@
 import { onMount, createSignal, Index } from "solid-js";
-import CanvasKitInit from 'canvaskit-wasm';
 import { createStore } from "solid-js/store";
+import CanvasKitInit from 'canvaskit-wasm';
+
 
 import "./SkiaSandbox.scss";
 
 const SkiaSandbox = () => {
-  const [audData, setAudData] = createStore([]);
-  CanvasKitInit().then((CanvasKit) => {
-    // CanvasKit is now initialized and ready to use
-    
-    // Your CanvasKit code here, for example:
-    const canvasEl = document.getElementById('myCanvas');
-    if (!canvasEl) {
-      console.error('Failed to find canvas element');
-      return;
+  CanvasKitInit({
+    // TODO: figure out how to host this from cloudflare worker
+    locateFile: (file) => 'https://unpkg.com/canvaskit-wasm@0.39.1/bin/'+file}).then((CanvasKit) => {
+    const surface = CanvasKit.MakeCanvasSurface('myCanvas');
+
+    const paint = new CanvasKit.Paint();
+    paint.setColor(CanvasKit.Color4f(0.9, 0, 0, 1.0));
+    paint.setStyle(CanvasKit.PaintStyle.Stroke);
+    paint.setAntiAlias(true);
+    const rr = CanvasKit.RRectXY(CanvasKit.LTRBRect(10, 60, 210, 260), 25, 15);
+
+    function draw(canvas) {
+      canvas.clear(CanvasKit.WHITE);
+      canvas.drawRRect(rr, paint);
     }
-  
-    const surface = CanvasKit.MakeCanvasSurface(canvasEl.id);
-    if (!surface) {
-      console.error('Could not make surface');
-      return;
-    }
-  
-    const skCanvas = surface.getCanvas();
-    // Example drawing: draw a blue rectangle
-    const paint = new CanvasKit.SkPaint();
-    paint.setColor(CanvasKit.Color4f(0, 0, 1, 1)); // RGBA: Blue
-    paint.setStyle(CanvasKit.PaintStyle.Fill);
-  
-    skCanvas.drawRect(CanvasKit.LTRBRect(100, 100, 300, 300), paint);
-    surface.flush();
+    surface.drawOnce(draw);
   });
 
   return (
