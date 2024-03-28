@@ -34,6 +34,7 @@
   "dependencies": {
     "@solidjs/router": "^0.8.3",
     "animejs": "^3.2.1",
+    "canvaskit-wasm": "^0.39.1",
     "clone-deep": "^4.0.1",
     "d3": "^7.8.5",
     "konva": "^9.2.2",
