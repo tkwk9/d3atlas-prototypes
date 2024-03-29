@@ -93,6 +93,15 @@ const SkiaSandbox = () => {
           https://twitter.com/XorDev/status/1475524322785640455
         </a>
       </div>
+      <div style={`color: rgb(162, 162, 162); padding-top: 8px;`}>
+        SkSL Documentation:{" "}
+        <a
+          href="https://twitter.com/XorDev/status/1475524322785640455"
+          style={`color: rgb(162, 162, 162);`}
+        >
+          https://skia.org/docs/user/sksl
+        </a>
+      </div>
     </div>
   );
 };
