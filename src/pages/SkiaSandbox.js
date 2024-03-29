@@ -15,7 +15,7 @@ const shaderCode = `
     float a;
     for (float i=0; i<4e2; i++) {
       a = i/2e2-1.;
-      p = cos(i*2.4+iTime+vec2(0,11))*sqrt(1.-a*a);
+      p = cos(i*2.4+iTime/2.5+vec2(0,11))*sqrt(1.-a*a);
       c = u/iResolution.y+vec2(p.x,a)/(p.y+2.);
       o += (cos(i+vec4(0,2,4,0))+1.)/dot(c,c)*(1.-p.y)/3e4;
     }
@@ -42,19 +42,24 @@ const SkiaSandbox = () => {
     const drawFrame = () => {
       let currentTime = Date.now();
       let elapsedTime = currentTime - startTime;
-      
-      // TODO: figure out if there's a way to pass named uniform
-      paint.setShader(shaderFactory.makeShader([
-        canvasWidth, // iResolution.x
-        canvasHeight, // iResolution.y
-        elapsedTime/1000.0 // iTime
-      ]));
 
-      canvas.drawRect(CanvasKit.LTRBRect(0, 0, canvasWidth, canvasHeight), paint);
+      // TODO: figure out if there's a way to pass named uniform
+      paint.setShader(
+        shaderFactory.makeShader([
+          canvasWidth, // iResolution.x
+          canvasHeight, // iResolution.y
+          elapsedTime / 1000.0, // iTime
+        ])
+      );
+
+      canvas.drawRect(
+        CanvasKit.LTRBRect(0, 0, canvasWidth, canvasHeight),
+        paint
+      );
       surface.flush();
 
       requestAnimationFrame(drawFrame);
-    }
+    };
     requestAnimationFrame(drawFrame);
   });
 
@@ -62,12 +67,31 @@ const SkiaSandbox = () => {
     <div class="SkiaSandbox">
       <div
         class="title"
-        style={`display:flex; flex-direction:column; justify-content:center; align-items:center`}
+        style={`display:flex; flex-direction:column; justify-content:center; align-items:center;`}
       >
         <h1 style={`padding: 0 0 20px`}>Skia Sandbox</h1>
       </div>
-      <div style={`background-color: black`}>
-        <canvas id="myCanvas" width={canvasWidth} height={canvasHeight}></canvas>
+      <div
+        style={`display:flex; 
+                background-color:#101010;
+                border-radius:15px;
+                box-shadow:0 10px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+              `}
+      >
+        <canvas
+          id="myCanvas"
+          width={canvasWidth}
+          height={canvasHeight}
+        ></canvas>
+      </div>
+      <div style={`color: rgb(162, 162, 162); padding-top: 8px;`}>
+        Shader Source:{" "}
+        <a
+          href="https://twitter.com/XorDev/status/1475524322785640455"
+          style={`color: rgb(162, 162, 162);`}
+        >
+          https://twitter.com/XorDev/status/1475524322785640455
+        </a>
       </div>
     </div>
   );
