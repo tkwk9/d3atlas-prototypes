@@ -2,7 +2,7 @@ import { onMount, createSignal, Index, onCleanup } from "solid-js";
 import { createStore } from "solid-js/store";
 import CanvasKitInit from "canvaskit-wasm";
 
-import "./SkiaSandbox.scss";
+import "./CanvasKitSksl.scss";
 
 // Source: @XorDev https://twitter.com/XorDev/status/1475524322785640455
 const shaderCode = `
@@ -26,7 +26,7 @@ const shaderCode = `
 const canvasWidth = 800;
 const canvasHeight = 600;
 
-const SkiaSandbox = () => {
+const CanvasKitSksl = () => {
   let animationFrameId;
   CanvasKitInit({
     // TODO: figure out how to host this from cloudflare
@@ -68,12 +68,12 @@ const SkiaSandbox = () => {
   });
 
   return (
-    <div class="SkiaSandbox">
+    <div class="CanvasKitSksl">
       <div
         class="title"
         style={`display:flex; flex-direction:column; justify-content:center; align-items:center;`}
       >
-        <h1 style={`padding: 0 0 20px`}>Skia Sandbox</h1>
+        <h1 style={`padding: 0 0 20px`}>SkSL =&gt CanvasKit</h1>
       </div>
       <div
         style={`display:flex; 
@@ -98,6 +98,15 @@ const SkiaSandbox = () => {
         </a>
       </div>
       <div style={`color: rgb(162, 162, 162); padding-top: 8px;`}>
+        CanvasKit Documentation:{" "}
+        <a
+          href="https://skia.org/docs/user/modules/canvaskit"
+          style={`color: rgb(162, 162, 162);`}
+        >
+          https://skia.org/docs/user/modules/canvaskit
+        </a>
+      </div>
+      <div style={`color: rgb(162, 162, 162); padding-top: 8px;`}>
         SkSL Documentation:{" "}
         <a
           href="https://skia.org/docs/user/sksl"
@@ -110,4 +119,4 @@ const SkiaSandbox = () => {
   );
 };
 
-export default SkiaSandbox;
+export default CanvasKitSksl;
