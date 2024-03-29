@@ -14,17 +14,17 @@ const shaderCode = `
     vec2 p = vec2(0), c=p, u=FC.xy*2.-iResolution.xy;
     float a;
     for (float i=0; i<4e2; i++) {
-      a = i/2e2-1.;
-      p = cos(i*5.4+iTime/2.5+vec2(0,11))*sqrt(1.-a*a);
-      c = u/iResolution.y+vec2(p.x,a)/(p.y+2.);
-      o += (cos(i+vec4(0,sin(iTime) * 2,4,0))+1.)/dot(c,c)*(1.-p.y)/3e4;
+      a = i/2e2-1.0;
+      p = cos(i*((sin(iTime/300.0))*1.4)+iTime/2.5+vec2(0,11))*sqrt(1.-a*a);
+      c = u/iResolution.y+vec2(p.x,a)/(p.y+2.)/1.5;
+      o += (cos(i+vec4((sin(iTime/5.0) + 1) * 4, 0, 4,0))+1.)/dot(c,c)*(1.-p.y)/((cos(iTime) + 1.3)*50000);
     }
     return o;
   }
 `;
 
-const canvasWidth = 800;
-const canvasHeight = 800;
+const canvasWidth = 700;
+const canvasHeight = 500;
 
 const CanvasKitSksl = () => {
   let animationFrameId;
