@@ -4,29 +4,43 @@ import CanvasKitInit from "canvaskit-wasm";
 
 import "./SkiaSandbox.scss";
 
+const shaderCode = `
+  uniform float iTime;
+
+  half4 main(float2 coord) {
+    float3 white = float3(0,0,0);
+    float3 black = float3(1,0,0);
+    return half4(mix(white, black, sin(iTime)), 1);
+  }
+`;
+
 const SkiaSandbox = () => {
   CanvasKitInit({
-    // TODO: figure out how to host this from cloudflare worker
+    // TODO: figure out how to host this from cloudflare
     locateFile: (file) => "https://unpkg.com/canvaskit-wasm@0.39.1/bin/" + file,
   }).then((CanvasKit) => {
     // MakeSWCanvasSurface MakeWebGLCanvasSurface MakeGPUCanvasSurface
     const surface = CanvasKit.MakeWebGLCanvasSurface("myCanvas");
-
-    const shaderCode = `
-      half4 main(float2 coord) {
-        float t = coord.x / 500;
-        half4 white = half4(1);
-        half4 black = half4(0,0,0,1);
-        return mix(white, black, t);
-      }
-    `;
+    const canvas = surface.getCanvas();
 
     const paint = new CanvasKit.Paint();
-    const shader = CanvasKit.RuntimeEffect.Make(shaderCode).makeShader([]);
-    paint.setShader(shader);
+    const shaderFactory = CanvasKit.RuntimeEffect.Make(shaderCode);
 
-    surface.getCanvas().drawRect(CanvasKit.LTRBRect(0, 0, 500, 400), paint);
-    surface.flush();
+    const startTime = Date.now();
+    const drawFrame = () => {
+      let currentTime = Date.now();
+      let elapsedTime = currentTime - startTime;
+      
+      paint.setShader(shaderFactory.makeShader([
+        // TODO: figure out if there's a way to pass named uniform
+        elapsedTime/1000.0 //iTime
+      ]));
+      canvas.drawRect(CanvasKit.LTRBRect(0, 0, 500, 400), paint);
+      surface.flush();
+
+      requestAnimationFrame(drawFrame);
+    }
+    requestAnimationFrame(drawFrame);
   });
 
   return (
