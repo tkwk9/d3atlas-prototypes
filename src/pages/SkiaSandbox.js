@@ -1,4 +1,4 @@
-import { onMount, createSignal, Index } from "solid-js";
+import { onMount, createSignal, Index, onCleanup } from "solid-js";
 import { createStore } from "solid-js/store";
 import CanvasKitInit from "canvaskit-wasm";
 
@@ -27,6 +27,7 @@ const canvasWidth = 800;
 const canvasHeight = 600;
 
 const SkiaSandbox = () => {
+  let animationFrameId;
   CanvasKitInit({
     // TODO: figure out how to host this from cloudflare
     locateFile: (file) => "https://unpkg.com/canvaskit-wasm@0.39.1/bin/" + file,
@@ -37,7 +38,6 @@ const SkiaSandbox = () => {
 
     const paint = new CanvasKit.Paint();
     const shaderFactory = CanvasKit.RuntimeEffect.Make(shaderCode);
-
     const startTime = Date.now();
     const drawFrame = () => {
       let currentTime = Date.now();
@@ -58,9 +58,13 @@ const SkiaSandbox = () => {
       );
       surface.flush();
 
-      requestAnimationFrame(drawFrame);
+      animationFrameId = requestAnimationFrame(drawFrame);
     };
-    requestAnimationFrame(drawFrame);
+    animationFrameId = requestAnimationFrame(drawFrame);
+  });
+
+  onCleanup(() => {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
   });
 
   return (
@@ -96,7 +100,7 @@ const SkiaSandbox = () => {
       <div style={`color: rgb(162, 162, 162); padding-top: 8px;`}>
         SkSL Documentation:{" "}
         <a
-          href="https://twitter.com/XorDev/status/1475524322785640455"
+          href="https://skia.org/docs/user/sksl"
           style={`color: rgb(162, 162, 162);`}
         >
           https://skia.org/docs/user/sksl
