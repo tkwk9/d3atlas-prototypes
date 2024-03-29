@@ -15,16 +15,16 @@ const shaderCode = `
     float a;
     for (float i=0; i<4e2; i++) {
       a = i/2e2-1.;
-      p = cos(i*2.4+iTime/2.5+vec2(0,11))*sqrt(1.-a*a);
+      p = cos(i*5.4+iTime/2.5+vec2(0,11))*sqrt(1.-a*a);
       c = u/iResolution.y+vec2(p.x,a)/(p.y+2.);
-      o += (cos(i+vec4(0,2,4,0))+1.)/dot(c,c)*(1.-p.y)/3e4;
+      o += (cos(i+vec4(0,sin(iTime) * 2,4,0))+1.)/dot(c,c)*(1.-p.y)/3e4;
     }
     return o;
   }
 `;
 
 const canvasWidth = 800;
-const canvasHeight = 600;
+const canvasHeight = 800;
 
 const CanvasKitSksl = () => {
   let animationFrameId;
@@ -73,7 +73,7 @@ const CanvasKitSksl = () => {
         class="title"
         style={`display:flex; flex-direction:column; justify-content:center; align-items:center;`}
       >
-        <h1 style={`padding: 0 0 20px`}>SkSL =&gt CanvasKit</h1>
+        <h1 style={`padding: 0 0 20px`}>CanvasKit &lt= SkSL</h1>
       </div>
       <div
         style={`display:flex; 

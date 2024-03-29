@@ -27,7 +27,7 @@ const NavBar = () => (
     <A href="/canvasstresstest">CanvasStressTest</A>
     <A href="/audvis">AudVis</A>
     <A href="/minesweeper300">Minesweeper300</A>
-    <A href="/skia_sandbox">CanvasKitSksl</A>
+    <A href="/canvaskit_sksl">CanvasKitSksl</A>
   </div>
 );
 
@@ -55,7 +55,7 @@ const Content = () => {
         <Route path="/canvasstresstest" end component={CanvasStressTest} />
         <Route path="/audvis" end component={AudVis} />
         <Route path="/minesweeper300" end component={Minesweeper300} />
-        <Route path="/skia_sandbox" end component={CanvasKitSksl} />
+        <Route path="/canvaskit_sksl" end component={CanvasKitSksl} />
         <Route path="*" end element={<Navigate href={"/"} />} />
       </Routes>
     </div>
